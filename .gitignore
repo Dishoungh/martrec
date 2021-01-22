@@ -4,3 +4,6 @@
 *.avi
 __pycache__/
 *.csv
+*.jpg
+*.jpeg
+*.png
