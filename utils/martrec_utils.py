@@ -140,6 +140,11 @@ def parse_arguments():
                         default=False,
                         help='Sends CSV file in csv save path to MTurk')
 
+    parser.add_argument('-cb', '--create-bucket',
+                        type=bool,
+                        default=False,
+                        help='Creates AWS bucket')
+
     args, _ = parser.parse_known_args()
     return args
 
@@ -151,27 +156,29 @@ def check_parsed(args):
 
     # Checks if delay time is valid
     if args.delay_time <= 0 or args.delay_time > 1000:
-        print("Invalid delay settings. Acceptable values are: [1-1000]")
+        print("[ERROR]: Invalid delay settings. Acceptable values are: [1-1000]")
         sys.exit()
 
     # Checks if there is a save path specified
     if args.save_path is None:
-        print("Invalid save path")
+        print("[ERROR]: Invalid save path")
         sys.exit()
 
     # Checks if save options are valid
     if args.option < 0 or args.option > 3:
-        print("Invalid option settings. Acceptable values are: [0-3]")
+        print("[ERROR]: Invalid option settings. Acceptable values are: [0-3]")
         sys.exit()
     else:
         if args.option != 3 and args.process is True:
-            print("Images will be saved under: {sp}".format(sp=args.save_path))
+            print("[INFO]: Images will be saved under: {sp}".format(sp=args.save_path))
 
     # Download the YOLOv3 models if needed
     if args.download_model:
+        print("[INFO]: Downloading YOLOv3 Model")
         subprocess.call(['./yolov3-coco/get_model.sh'])
 
     if args.clear_outputs is True:
+        print("[INFO]: Clearing Outputs")
         clear_outputs(args.save_path, args.csv_save)
 
 
@@ -181,3 +188,5 @@ def clear_outputs(output_path, csv_path):
 
     for file in os.listdir(csv_path):
         os.remove(os.path.join(csv_path, file))
+
+    print("[SUCCESS]: Cleared Output Files")

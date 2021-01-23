@@ -16,6 +16,10 @@ def main():
         # Extract images (using YOLO)
         process(args, labels, colors, net, layer_names)
 
+    if args.create_bucket is True:
+        # Create AWS bucket
+        create_bucket(args.bucket_name)
+
     if args.send_images is True:
         # Upload extracted images to AWS S3 (if argument is set to true)
         send_to_s3(args)
