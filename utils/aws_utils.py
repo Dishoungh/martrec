@@ -36,13 +36,11 @@ def get_csv(args):
         objects = subprocess.run(["aws", "s3api", "list-objects", "--bucket", args.bucket_name,
                         "--query", 'Contents[].{Key: Key}'], text=True,
                         stdout=subprocess.PIPE).stdout.splitlines()
-
         with open(os.path.join(args.csv_save, '{d}.csv'.format(d=time.strftime("%Y%m%d-%H%M%S"))), 'w') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(['image_url'])
             for obj in objects:
-                if 'Key' in obj:
-                    writer.writerow(["https://{bn}.s3.amazonaws.com/{o}".format(bn=args.bucket_name, o=obj.strip(' "')[7:])])
+                writer.writerow(["https://{bn}.s3.amazonaws.com/{o}".format(bn=args.bucket_name, o=obj)])
         print('[SUCCESS] CSV Generation Complete...')
     except Exception as err:
         print("[ERROR]: {e}".format(e=err))
