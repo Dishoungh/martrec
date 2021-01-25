@@ -3,6 +3,7 @@ import os
 import time
 import csv
 import config.keys
+import sys
 
 def create_bucket(bucket_name):
     try:
@@ -14,7 +15,8 @@ def create_bucket(bucket_name):
             print("[SUCCESS]: AWS Bucket Created as {bn}".format(bn=bucket_name))
 
         except Exception as e:
-            print("[ERROR]: {err}".format(err=e)) 
+            print("[ERROR]: {err}".format(err=e))
+            sys.exit()
 
 def send_to_s3(args):
     # Upload all files in args.save_path
@@ -24,7 +26,7 @@ def send_to_s3(args):
         print("[SUCCESS]: Images successfully uploaded to {bn}".format(bn=args.bucket_name))
     except Exception as err:
         print("[ERROR]: {e}".format(e=err))
-
+        sys.exit()
 
 def get_csv(args):
     try:
@@ -40,6 +42,7 @@ def get_csv(args):
         print('[SUCCESS] CSV Generation Complete...')
     except Exception as err:
         print("[ERROR]: {e}".format(e=err))
+        sys.exit()
 
 
 def send_batch(csv_path):
@@ -48,4 +51,5 @@ def send_batch(csv_path):
     target_file = max([os.path.join(csv_path, filename) for filename in files])
 
     # Send csv file to MTurk
+    print(target_file)
     print(target_file)

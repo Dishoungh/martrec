@@ -102,7 +102,7 @@ def parse_arguments():
                              '0 = Save Raw Image Only\n'
                              '1 = Save Labeled Image Only\n'
                              '2 = Save Both Raw and Labeled\n'
-                             '3 = Save No Images'
+                             '3 = Save No Images\n'
                              'Default: 0')
 
     parser.add_argument('-s3', '--send-images',
