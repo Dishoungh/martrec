@@ -193,9 +193,6 @@ def generate_boxes_confidences_classids(outs, height, width, tconf):
 
     for out in outs:
         for detection in out:
-            # print(detection)
-            # a = input('GO!')
-
             # Get the scores, class ID, and the confidence of the prediction
             scores = detection[5:]
             classid = np.argmax(scores)
@@ -278,9 +275,6 @@ def count_frames_manual(video):
             break
 
         total += 1
-
-    video.release()
-    return total
 
     video.release()
     return total

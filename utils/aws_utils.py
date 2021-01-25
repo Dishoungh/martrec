@@ -4,10 +4,6 @@ import time
 import csv
 import config.keys
 
-ACCESS_ID = config.keys.AWS_ACCESS_KEY_ID
-SECRET_ID = config.keys.AWS_SECRET_KEY
-CANONICAL = config.keys.CANONICAL_USER_ID
-
 def create_bucket(bucket_name):
     try:
         subprocess.run(['aws', 's3api', 'create-bucket', '--bucket', bucket_name, '--region', 'us-east-1'], stdout=subprocess.DEVNULL)
@@ -52,3 +48,4 @@ def send_batch(csv_path):
     target_file = max([os.path.join(csv_path, filename) for filename in files])
 
     # Send csv file to MTurk
+    print(target_file)

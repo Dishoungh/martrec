@@ -154,6 +154,9 @@ def check_parsed(args):
     if not os.path.isdir(args.save_path):
         os.mkdir(args.save_path)
 
+    if not os.path.isdir(args.csv_save):
+        os.mkdir(args.csv_save)
+
     # Checks if delay time is valid
     if args.delay_time <= 0 or args.delay_time > 1000:
         print("[ERROR]: Invalid delay settings. Acceptable values are: [1-1000]")
@@ -175,7 +178,7 @@ def check_parsed(args):
     # Download the YOLOv3 models if needed
     if args.download_model:
         print("[INFO]: Downloading YOLOv3 Model")
-        subprocess.call(['./yolov3-coco/get_model.sh'])
+        subprocess.call(['./{cfg}get_model.sh'.format(cfg=args.model_path)])
 
     if args.clear_outputs is True:
         print("[INFO]: Clearing Outputs")
