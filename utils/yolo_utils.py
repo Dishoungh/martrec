@@ -150,16 +150,16 @@ def process(args, labels, colors, net, layer_names):
         vid.release()
         cv.destroyAllWindows()
 
-    print("Process done.")
+    print("[SUCCESS] Image Processing Complete...")
 
 
 def save_image(img, output_name, save_path, raw):
     num = 1
     while True:
         if raw is True:
-            filename = '{s}{o}{n}_raw.jpg'.format(s=save_path, o=output_name, n=num)
+            filename = '{s}{o}{n}_raw.png'.format(s=save_path, o=output_name, n=num)
         else:
-            filename = '{s}{o}{n}_labeled.jpg'.format(s=save_path, o=output_name, n=num)
+            filename = '{s}{o}{n}_labeled.png'.format(s=save_path, o=output_name, n=num)
         if os.path.isfile(filename):
             num += 1
         else:

@@ -19,6 +19,7 @@ def main():
     if args.create_bucket is True:
         # Create AWS bucket
         create_bucket(args.bucket_name)
+        set_cors(args.bucket_name, args.cors_file)
 
     if args.send_images is True:
         # Upload extracted images to AWS S3 (if argument is set to true)

@@ -145,6 +145,11 @@ def parse_arguments():
                         default=False,
                         help='Creates AWS bucket')
 
+    parser.add_argument('-cor', '--cors-file',
+                        type=str,
+                        default='config/cors.json',
+                        help='Specifies location of cors json file')
+
     args, _ = parser.parse_known_args()
     return args
 

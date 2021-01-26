@@ -45,6 +45,14 @@ def get_csv(args):
         sys.exit()
 
 
+def set_cors(bucket_name, cors_file):
+    try:
+        subprocess.run(['aws', 's3api', 'put-bucket-cors', '--bucket', bucket_name, '--cors-configuration', 'file://{c}'.format(c=cors_file)], stdout=subprocess.DEVNULL)
+        print("[SUCCESS] CORS Settings Applied in Bucket: {bn}".format(bn=bucket_name))
+    except Exception as err:
+        print("[ERROR]: {e}".format(e=err))
+        sys.exit()
+
 def send_batch(csv_path):
     # Get latest file in csv_path
     files = os.listdir(csv_path)
