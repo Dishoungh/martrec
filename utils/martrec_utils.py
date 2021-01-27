@@ -3,7 +3,8 @@ import os
 import sys
 import subprocess
 import platform
-
+import requests
+from utils.yolo_utils import show_progress_bar
 
 def parse_arguments():
     # Grab arguments from command line
@@ -188,15 +189,28 @@ def check_parsed(args):
 
     # Download the YOLOv3 models if needed
     if args.download_model:
+        print("[INFO] Downloading YOLOv3 Model...")
         if 'Linux' in platform.platform():
-            print("[INFO] Downloading YOLOv3 Model...")
             subprocess.call(['./{cfg}get_model.sh'.format(cfg=args.model_path)])
             print("[SUCCESS] YOLOv3 Model Downloaded...")
         elif 'Windows' in platform.platform():
-            print("[INFO] Downloading YOLOv3 Model...")
-            # Call a .bat file for Windows
+            with open(args.weights, 'wb') as f:
+                response = requests.get("https://pjreddie.com/media/files/yolov3.weights", stream=True)
+                total_length = response.headers.get('content-length')
+
+                if total_length is None:
+                    f.write(response.content)
+                else:
+                    data_length = 0
+                    total_length = int(total_length)
+                    for data in response.iter_content(chunk_size=4096):
+                        f.write(data)
+                        data_length += len(data)
+                        show_progress_bar(data_length, total_length, 0, 2e-7)        
+
+            print("\n[SUCCESS] YOLOv3 Model Downloaded...")
         else:
-            print("[ERROR] Unknown platform")
+            print("[ERROR] Unknown platform. Download link through https://pjreddie.com/media/files/yolov3.weights. Exiting...")
             sys.exit()
 
     if args.clear_outputs is True:

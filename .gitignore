@@ -8,3 +8,5 @@ __pycache__/
 *.jpeg
 *.png
 *.odf
+*.py~
+*.un~
