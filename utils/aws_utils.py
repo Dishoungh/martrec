@@ -4,7 +4,6 @@ import time
 import csv
 import config.keys
 import sys
-import pexpect
 import errno
 import platform
 
