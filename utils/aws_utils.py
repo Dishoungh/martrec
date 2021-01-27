@@ -25,51 +25,35 @@ def configure_aws():
     print("[INFO] Configuring AWS...")
 
     if ('Linux' in platform.platform()):
-        process = pexpect.spawn('aws configure')
-
-        # Asks for Access ID
-        process.expect('AWS Access Key ID [None]:')
-        process.sendline(config.keys.AWS_ACCESS_KEY_ID)
-
-        # Asks for Secret Key
-        process.expect('AWS Secret Access Key [None]:')
-        process.sendline(config.keys.AWS_SECRET_KEY)
-
-        # Asks for Default Region
-        process.expect('Default region name [None]:')
-        process.sendline(config.keys.AWS_REGION_NAME)
-
-        # Asks for Output Format
-        process.expect('Default output format [None]:')
-        process.sendline(config.keys.AWS_ACCESS_KEY_ID)
+        process = subprocess.Popen(['aws', 'configure'], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL)
     elif ('Windows' in platform.platform()):
         process = subprocess.Popen('aws configure', stdin=subprocess.PIPE, stdout=subprocess.DEVNULL)
-
-        for x in range(4):
-            # Enter Access Key ID
-            ans = None
-            if x == 0:
-                ans = config.keys.AWS_ACCESS_KEY_ID
-            elif x == 1:
-                ans = config.keys.AWS_SECRET_KEY
-            elif x == 2:
-                ans = config.keys.AWS_REGION_NAME
-            elif x == 3:
-                ans = config.keys.AWS_OUTPUT_FORMAT
-
-            line = ('{a}\n'.format(a=ans)).encode()
-
-            try:
-                process.stdin.write(line)
-            except IOError as e:
-                if e.errno == errno.EPIPE or e.errno == errno.EINVAL:
-                    break
-                else:
-                    raise
     else:
         print("[ERROR] AWS Configuration failed due to unknown platform detection. Exiting...")
         sys.exit()
 
+    for x in range(4):
+        # Enter Access Key ID
+        ans = None
+        if x == 0:
+            ans = config.keys.AWS_ACCESS_KEY_ID
+        elif x == 1:
+            ans = config.keys.AWS_SECRET_KEY
+        elif x == 2:
+            ans = config.keys.AWS_REGION_NAME
+        elif x == 3:
+            ans = config.keys.AWS_OUTPUT_FORMAT
+
+        line = ('{a}\n'.format(a=ans)).encode()
+
+        try:
+            process.stdin.write(line)
+        except IOError as e:
+            if e.errno == errno.EPIPE or e.errno == errno.EINVAL:
+                break
+            else:
+                raise
+    
     print("[SUCCESS] AWS Configured...")
 
 
