@@ -24,9 +24,10 @@ def init(args):
 
 def process(args, labels, colors, net, layer_names):
     # If both image and video files are given then raise error
+    print('[INFO] Starting image processing...')
+
     if args.image_path is None and args.video_path is None:
-        print('Neither path to an image or path to video provided')
-        print('Starting Inference on Webcam')
+        print('[WARNING] Neither path to an image or path to video provided. Starting Inference on Webcam...')
 
     # Do inference with given image
     if args.image_path:
@@ -35,14 +36,14 @@ def process(args, labels, colors, net, layer_names):
             img = cv.imread(args.image_path)
             height, width = img.shape[:2]
         except:
-            raise Exception('Image cannot be loaded!\n'
+            raise Exception('[ERROR] Image cannot be loaded!\n'
                             'Please check the path provided!')
         finally:
             img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, args)
             save_image(img, args.output_name, args.save_path)
     elif args.video_path:
         if args.output_name is None:
-            print("No output name specified. Exiting...")
+            print("[ERROR] No output name specified. Exiting...")
             sys.exit()
 
         # Read the video
@@ -51,7 +52,7 @@ def process(args, labels, colors, net, layer_names):
             height, width = None, None
             writer = None
         except:
-            raise Exception('Video cannot be loaded!\n'
+            raise Exception('[ERROR] Video cannot be loaded!\n'
                             'Please check the path provided!')
         finally:
             timings = np.array([])
@@ -64,9 +65,9 @@ def process(args, labels, colors, net, layer_names):
                 try:
                     total = int(vid.get(cv.cv.CV_CAP_PROP_FRAME_COUNT))
                 except:
-                    print("Have to count frames manually. This might take a while...")
+                    print("[WARNING] Have to count frames manually. This might take a while...")
                     total = count_frames_manual(vid)
-                    print("Count complete...")
+                    print("[SUCCESS] Count complete...")
 
             delay = args.delay_time
             num_images = 0

@@ -9,6 +9,9 @@ def main():
     args = parse_arguments()
     check_parsed(args)
 
+    if args.configure_aws is True:
+        configure_aws()
+
     if args.process is True:
         # Initialize labels, colors, and pretrain model
         labels, colors, net, layer_names = init(args)
@@ -34,7 +37,7 @@ def main():
         # WARNING: The most recent csv file in the directory will be sent
         send_batch(args.csv_save)
 
-    print('[INFO]: Program complete...')
+    print('[SUCCESS] Program complete...')
 
 if __name__ == '__main__':
     main()
