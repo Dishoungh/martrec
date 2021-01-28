@@ -1,4 +1,4 @@
-## Dishoungh/martrec
+## martrec
 A simple python script to automate the process of extracting images of trucks and cars on the road from a video file to uploading extracted images to AWS (Amazon Web Services) S3 to generating a .csv file of the objects' URLs for Mechanical Turk.
 
 Crowdsourcing processes can be tedious to setup. You'll have to upload the data somewhere and grab their URLs individually and compile them into a .csv file for Mechanical Turk to create HITs (Human Intelligence Tasks). This can take a while. The purpose of this repo is to automate most of that process and can be applied to applied to multiple applications.
