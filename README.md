@@ -77,9 +77,9 @@ Screenshots (5), (6), (7), (8) all show the functionality of the command. In Scr
 
 (5) ![Alt text](https://user-images.githubusercontent.com/47036723/106178416-5d4c4900-615f-11eb-9016-4a8c9cd03f0f.png "AWS Functionality")
 
-(6) ![Alt text](https://user-images.githubusercontent.com/47036723/106178943-f9765000-615f-11eb-99b1-14dbeac7feab.png "S3 Console")
+(6) ![Alt text](https://user-images.githubusercontent.com/47036723/106192809-4b27d600-6172-11eb-9670-f1714664341b.png "S3 Console")
     
-(7) ![Alt text](https://user-images.githubusercontent.com/47036723/106178948-fbd8aa00-615f-11eb-95e2-107cc4961556.png "Objects in Created Bucket")
+(7) ![Alt text](https://user-images.githubusercontent.com/47036723/106192816-4e22c680-6172-11eb-8203-d5b16b1bb292.png "Objects in Created Bucket")
 
 (8) ![Alt text](https://user-images.githubusercontent.com/47036723/106179123-36424700-6160-11eb-8000-19eebc6e15f9.png "CSV File")
 
