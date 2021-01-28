@@ -2,7 +2,7 @@ import subprocess
 import os
 import time
 import csv
-import config.keys
+#import config.keys
 import sys
 import errno
 import platform
