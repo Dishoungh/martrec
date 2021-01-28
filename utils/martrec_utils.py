@@ -3,8 +3,6 @@ import os
 import sys
 import subprocess
 import platform
-import requests
-from utils.yolo_utils import show_progress_bar
 
 def parse_arguments():
     # Grab arguments from command line
@@ -189,13 +187,20 @@ def check_parsed(args):
 
     # Download the YOLOv3 models if needed
     if args.download_model:
+        link = 'https://pjreddie.com/media/files/yolov3.weights'
+
         print("[INFO] Downloading YOLOv3 Model...")
         if 'Linux' in platform.platform():
-            subprocess.call(['./{cfg}get_model.sh'.format(cfg=args.model_path)])
-            print("[SUCCESS] YOLOv3 Model Downloaded...")
+            try:
+                subprocess.run(['wget', '--no-check-certificate', link, '-P', args.model_path])
+                print("[SUCCESS] YOLOv3 Model Downloaded...")
+            except Exception as err:
+                print("[ERROR] {e}".format(e=err))
         elif 'Windows' in platform.platform():
+            import requests
+            from utils.yolo_utils import show_progress_bar
             with open(args.weights, 'wb') as f:
-                response = requests.get("https://pjreddie.com/media/files/yolov3.weights", stream=True)
+                response = requests.get(link, stream=True)
                 total_length = response.headers.get('content-length')
 
                 if total_length is None:
