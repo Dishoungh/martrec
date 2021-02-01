@@ -3,7 +3,6 @@ from utils.martrec_utils import *
 from utils.aws_utils import *
 
 
-# TODO: Clean up code, implement AWS, and redo README
 def main():
     # Parse arguments from command line and check arguments
     args = parse_arguments()
