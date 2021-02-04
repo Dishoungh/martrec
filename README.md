@@ -17,6 +17,11 @@ Crowdsourcing processes can be tedious to setup. You'll have to upload the data 
     ```sh
     pip3 install opencv-python numpy awscli
     ```
+  - You may need to also pip3 install "requests" if you're on Windows in order to download the yolov3 weights model.
+    ```sh
+    pip3 install requests
+    ```
+
 - Cloning the Repo
   ```sh
   git clone https://github.com/Dishoungh/martrec.git

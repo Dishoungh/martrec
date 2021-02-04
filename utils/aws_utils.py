@@ -56,27 +56,27 @@ def configure_aws():
     print("[SUCCESS] AWS Configured...")
 
 
-def send_to_s3(args):
-    # Upload all files in args.save_path
+def send_to_s3(save_path, bucket_name):
+    # Upload all files in save_path
     try:
-        subprocess.run(['aws', 's3', 'sync', args.save_path, 's3://{bn}'.format(bn=args.bucket_name),
+        subprocess.run(['aws', 's3', 'sync', save_path, 's3://{bn}'.format(bn=bucket_name),
                         '--acl', 'public-read'], stdout=subprocess.DEVNULL)
-        print("[SUCCESS] Images successfully uploaded to {bn}".format(bn=args.bucket_name))
+        print("[SUCCESS] Images successfully uploaded to {bn}".format(bn=bucket_name))
     except Exception as err:
         print("[ERROR] {e}".format(e=err))
         sys.exit()
 
-def get_csv(args):
+def get_csv(csv_save, bucket_name):
     try:
         # Grab all items stored in AWS bucket
-        objects = subprocess.run(["aws", "s3api", "list-objects", "--bucket", args.bucket_name,
+        objects = subprocess.run(["aws", "s3api", "list-objects", "--bucket", bucket_name,
                         "--query", 'Contents[].{Key: Key}'], text=True,
                         stdout=subprocess.PIPE).stdout.splitlines()
-        with open(os.path.join(args.csv_save, '{d}.csv'.format(d=time.strftime("%Y%m%d-%H%M%S"))), 'w') as csv_file:
+        with open(os.path.join(csv_save, '{d}.csv'.format(d=time.strftime("%Y%m%d-%H%M%S"))), 'w') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(['image_url'])
             for obj in objects:
-                writer.writerow(["https://{bn}.s3.amazonaws.com/{o}".format(bn=args.bucket_name, o=obj)])
+                writer.writerow(["https://{bn}.s3.amazonaws.com/{o}".format(bn=bucket_name, o=obj)])
         print('[SUCCESS] CSV Generation Complete...')
     except Exception as err:
         print("[ERROR] {e}".format(e=err))

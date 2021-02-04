@@ -5,15 +5,15 @@ import os
 import sys
 
 
-def init(args):
+def init(labelfile, config, weights):
     # Get the labels
-    labels = open(args.labels).read().strip().split('\n')
+    labels = open(labelfile).read().strip().split('\n')
 
     # Initializing colors to represent each label uniquely
     colors = np.random.randint(0, 255, size=(len(labels), 3), dtype='uint8')
 
     # Load the weights and configuration to form the pretrained YOLOv3 model
-    net = cv.dnn.readNetFromDarknet(args.config, args.weights)
+    net = cv.dnn.readNetFromDarknet(config, weights)
 
     # Get the output layer names of the model
     layer_names = net.getLayerNames()
@@ -22,33 +22,42 @@ def init(args):
     return labels, colors, net, layer_names
 
 
-def process(args, labels, colors, net, layer_names):
+def process(image_path, video_path, output_name, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, labels, colors, net, layer_names):
     # If both image and video files are given then raise error
     print('[INFO] Starting image processing...')
 
-    if args.image_path is None and args.video_path is None:
+    if image_path is None and video_path is None:
         print('[WARNING] Neither path to an image or path to video provided. Starting Inference on Webcam...')
 
     # Do inference with given image
-    if args.image_path:
+    if image_path:
+
+        if not os.path.exists(image_path):
+            print("[ERROR] Image path does not exist. Exiting...")
+            sys.exit()
+
         # Read the image
         try:
-            img = cv.imread(args.image_path)
+            img = cv.imread(image_path)
             height, width = img.shape[:2]
         except:
             raise Exception('[ERROR] Image cannot be loaded!\n'
                             'Please check the path provided!')
         finally:
-            img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, args)
-            save_image(img, args.output_name, args.save_path)
-    elif args.video_path:
-        if args.output_name is None:
+            img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
+            save_image(img, output_name, save_path)
+    elif video_path:
+        if output_name is None:
             print("[ERROR] No output name specified. Exiting...")
+            sys.exit()
+
+        if not os.path.exists(video_path):
+            print("ERROR] Video path does not exist. Exiting...")
             sys.exit()
 
         # Read the video
         try:
-            vid = cv.VideoCapture(args.video_path)
+            vid = cv.VideoCapture(video_path)
             height, width = None, None
             writer = None
         except:
@@ -69,7 +78,7 @@ def process(args, labels, colors, net, layer_names):
                     total = count_frames_manual(vid)
                     print("[SUCCESS] Count complete...")
 
-            delay = args.delay_time
+            delay = delay_time
             num_images = 0
 
             # Scan each frame in video
@@ -87,17 +96,17 @@ def process(args, labels, colors, net, layer_names):
                 if width is None or height is None:
                     height, width = labeled_frame.shape[:2]
 
-                if writer is None and args.save_video is True:
+                if writer is None and save_video is True:
                     # Initialize the video writer
                     fourcc = cv.VideoWriter_fourcc(*"MJPG")
-                    writer = cv.VideoWriter(args.video_output_path, fourcc, 30,
+                    writer = cv.VideoWriter(video_output_path, fourcc, 30,
                                             (labeled_frame.shape[1], labeled_frame.shape[0]), True)
 
                 # Time frame inference and show progress
                 start = time.time()
                 if delay <= 0 and labeled_frame is not None:
                     labeled_frame, _, _, classids, _ = infer_image(net, layer_names, height, width,
-                                                                   labeled_frame, colors, labels, args)
+                                                                   labeled_frame, colors, labels, confidence, threshold)
 
                     try:
                         obj = labels[classids[0]]
@@ -105,15 +114,15 @@ def process(args, labels, colors, net, layer_names):
                         obj = None
 
                     if ((obj == 'truck') or (obj == 'car')) and delay <= 0:
-                        if (args.option == 0) or (args.option == 2):  # Save raw image
-                            save_image(raw_frame, args.output_name, args.save_path, True)
-                        elif (args.option == 1) or (args.option == 2):  # Save labeled image
-                            save_image(labeled_frame, args.output_name, args.save_path, False)
+                        if (option == 0) or (option == 2):  # Save raw image
+                            save_image(raw_frame, output_name, save_path, True)
+                        elif (option == 1) or (option == 2):  # Save labeled image
+                            save_image(labeled_frame, output_name, save_path, False)
                         num_images += 1
-                        delay = args.delay_time
+                        delay = delay_time
 
                 delay -= 1
-                if args.save_video is True:
+                if save_video is True:
                     writer.write(labeled_frame)
 
                 end = time.time()
@@ -136,11 +145,11 @@ def process(args, labels, colors, net, layer_names):
 
             if count == 0:
                 frame, boxes, confidences, classids, index = infer_image(net, layer_names, height, width, frame, colors,
-                                                                         labels, args)
+                                                                         labels, confidence, threshold)
                 count += 1
             else:
                 frame, boxes, confidences, classids, index = infer_image(net, layer_names, height, width, frame, colors,
-                                                                         labels, args, boxes, confidences, classids,
+                                                                         labels, confidence, threshold, boxes, confidences, classids,
                                                                          index, infer=False)
                 count = (count + 1) % 6
 
@@ -201,7 +210,6 @@ def generate_boxes_confidences_classids(outs, height, width, tconf):
 
             # Consider only the predictions that are above a certain confidence level
             if confidence > tconf:
-                # TODO Check detection
                 box = detection[0:4] * np.array([width, height, width, height])
                 centerX, centerY, bwidth, bheight = box.astype('int')
 
@@ -218,7 +226,7 @@ def generate_boxes_confidences_classids(outs, height, width, tconf):
     return boxes, confidences, classids
 
 
-def infer_image(net, layer_names, height, width, img, colors, labels, args,
+def infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold, 
                 boxes=None, confidences=None, classids=None, idxs=None, infer=True):
     if infer:
         # Constructing a blob from the input image
@@ -229,18 +237,13 @@ def infer_image(net, layer_names, height, width, img, colors, labels, args,
         net.setInput(blob)
 
         # Getting the outputs from the output layers
-        start = time.time()
         outs = net.forward(layer_names)
-        end = time.time()
-
-        if args.show_time:
-            print("[INFO] YOLOv3 took {:6f} seconds".format(end - start))
 
         # Generate the boxes, confidences, and classIDs
-        boxes, confidences, classids = generate_boxes_confidences_classids(outs, height, width, args.confidence)
+        boxes, confidences, classids = generate_boxes_confidences_classids(outs, height, width, confidence)
 
         # Apply Non-Maxima Suppression to suppress overlapping bounding boxes
-        idxs = cv.dnn.NMSBoxes(boxes, confidences, args.confidence, args.threshold)
+        idxs = cv.dnn.NMSBoxes(boxes, confidences, confidence, threshold)
 
     if boxes is None or confidences is None or idxs is None or classids is None:
         raise Exception('[ERROR] Required variables are set to None before drawing boxes on images.')
