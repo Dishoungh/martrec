@@ -24,13 +24,13 @@ def init(labelfile, config, weights):
 
 def process(image_path, video_path, output_name, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, labels, colors, net, layer_names):
     # If both image and video files are given then raise error
-    print('[INFO] Starting image processing...')
 
     if image_path is None and video_path is None:
         print('[WARNING] Neither path to an image or path to video provided. Starting Inference on Webcam...')
 
     # Do inference with given image
     if image_path:
+	    print('[INFO] Starting image processing...')
 
         if not os.path.exists(image_path):
             print("[ERROR] Image path does not exist. Exiting...")
@@ -47,6 +47,8 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
             img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
             save_image(img, output_name, save_path)
     elif video_path:
+	    print('[INFO] Starting video processing...')
+    
         if output_name is None:
             print("[ERROR] No output name specified. Exiting...")
             sys.exit()

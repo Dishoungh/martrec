@@ -4,6 +4,33 @@ import sys
 import subprocess
 import platform
 
+# Default Values
+DEFAULT_AWS_CONFIGURE_SETTING         = False
+DEFAULT_AWS_BUCKET_NAME_SETTING       = None
+DEFAULT_YOLO_CONFIDENCE_SETTING       = 0.5
+DEFAULT_AWS_CREATE_BUCKET_SETTING     = False
+DEFAULT_YOLO_CONFIG_SETTING           = './config/yolov3.cfg'
+DEFAULT_CLEAR_OUTPUTS_SETTING         = False
+DEFAULT_AWS_CORS_FILE_SETTING         = 'config/cors.json'
+DEFAULT_AWS_CSV_FILE_SETTING          = './csv_files'
+DEFAULT_YOLO_DOWNLOAD_MODEL_SETTING   = False
+DEFAULT_YOLO_DELAY_TIME_SETTING       = 100
+DEFAULT_AWS_GENERATE_CSV_SETTING      = False
+DEFAULT_YOLO_IMAGE_PATH_SETTING       = None
+DEFAULT_YOLO_LABELS_SETTING           = './config/coco-labels'
+DEFAULT_YOLO_MODEL_PATH_SETTING       = './config/'
+DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING = 0
+DEFAULT_YOLO_OUTPUT_NAME_SETTING      = 'output'
+DEFAULT_YOLO_PROCESS_SETTING          = False
+DEFAULT_YOLO_SAVE_PATH_SETTING        = './output_data/'
+DEFAULT_AWS_SEND_IMAGES_SETTING       = False
+DEFAULT_AWS_SEND_BATCH_SETTING        = False
+DEFAULT_YOLO_SAVE_VIDEO_SETTING       = False
+DEFAULT_YOLO_THRESHOLD_SETTING        = 0.3
+DEFAULT_YOLO_VIDEO_PATH_SETTING       = None
+DEFAULT_YOLO_VIDEO_OUTPUT_PATH        = './output.mp4'
+DEFAULT_YOLO_WEIGHTS_SETTING          = './config/yolov3.weights'
+
 def parse_arguments():
     # Grab arguments from command line
     parser = argparse.ArgumentParser()
@@ -12,90 +39,85 @@ def parse_arguments():
     
     parser.add_argument('-aws', '--configure-aws',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_AWS_CONFIGURE_SETTING,
                         help='Initiates AWS configuration. Requires an ID and Secret Key in the keys.py file')
     
     parser.add_argument('-bn,', '--bucket-name',
                         type=str,
-                        default=None,
+                        default=DEFAULT_AWS_BUCKET_NAME_SETTING,
                         help='Specifies name of the S3 bucket')
     
     parser.add_argument('-c', '--confidence',
                         type=float,
-                        default=0.5,
+                        default=DEFAULT_YOLO_CONFIDENCE_SETTING,
                         help='The model will reject boundaries which '
                              'has a probability less than the confidence value. '
                              'default: 0.5')
     
     parser.add_argument('-cb', '--create-bucket',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_AWS_CREATE_BUCKET_SETTING,
                         help='Creates AWS bucket')
     
     parser.add_argument('-cfg', '--config',
                         type=str,
-                        default='./config/yolov3.cfg',
+                        default=DEFAULT_YOLO_CONFIG_SETTING,
                         help='Path to the configuration file for the '
                              'YOLOv3 model.')
                              
     parser.add_argument('-co', '--clear-outputs',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_CLEAR_OUTPUTS_SETTING,
                         help='Clears the data in the output folder including any generated csv files')                 
     
     parser.add_argument('-cor', '--cors-file',
                         type=str,
-                        default='config/cors.json',
+                        default=DEFAULT_AWS_CORS_FILE_SETTING,
                         help='Specifies location of cors json file')
     
     parser.add_argument('-csv', '--csv-save',
                         type=str,
-                        default='./csv_files',
+                        default=DEFAULT_AWS_CSV_FILE_SETTING,
                         help='Specifies where to save the AWS csv file')
     
     parser.add_argument('-dm', '--download-model',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_YOLO_DOWNLOAD_MODEL_SETTING,
                         help='Set to True, if the model weights and '
                              'configurations are not present on your local machine.')
     
     parser.add_argument('-dt', '--delay-time',
                         type=int,
-                        default=100,
+                        default=DEFAULT_YOLO_DELAY_TIME_SETTING,
                         help='Sets the delay time for extracting images. '
                              'Purpose of this is to not spam the output folder.'
                              '\nAcceptable values are: [1-1000]')
     
-    parser.add_argument('-g', '--gui',
-                        type=bool,
-                        default=False,
-                        help='Initiates GUI')
-    
     parser.add_argument('-gen', '--generate-csv',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_AWS_GENERATE_CSV_SETTING,
                         help='Generates a CSV file, listing all objects in the specified AWS bucket')
     
     parser.add_argument('-i', '--image-path',
                         type=str,
-                        default=None,
+                        default=DEFAULT_YOLO_IMAGE_PATH_SETTING,
                         help='The path to the image file to process.')
     
     parser.add_argument('-l', '--labels',
                         type=str,
-                        default='./config/coco-labels',
+                        default=DEFAULT_YOLO_LABELS_SETTING,
                         help='Path to the file having the labels in a '
                              'new-line separated way.')
     
     parser.add_argument('-m', '--model-path',
                         type=str,
-                        default='./config/',
+                        default=DEFAULT_YOLO_MODEL_PATH_SETTING,
                         help='The directory where the model weights '
                              'and configuration files are.')
     
     parser.add_argument('-o', '--option',
                         type=int,
-                        default=0,
+                        default=DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING,
                         help='Determines how the program will save images\n'
                              'Options:\n'
                              '0 = Save Raw Image Only\n'
@@ -106,7 +128,7 @@ def parse_arguments():
                              
     parser.add_argument('-on', '--output-name',
                         type=str,
-                        default='output',
+                        default=DEFAULT_YOLO_OUTPUT_NAME_SETTING,
                         help='Sets the name of the output image. Default is: output')
     
     parser.add_argument('-p', '--process',
@@ -136,24 +158,24 @@ def parse_arguments():
     
     parser.add_argument('-th', '--threshold',
                         type=float,
-                        default=0.3,
+                        default=DEFAULT_YOLO_THRESHOLD_SETTING,
                         help='The threshold to use when applying the '
                              'Non-Max Suppression')
     
     parser.add_argument('-v', '--video-path',
                         type=str,
-                        default=None,
+                        default=DEFAULT_YOLO_VIDEO_PATH_SETTING,
                         help='The path to the video file to process.')
     
     parser.add_argument('-vo', '--video-output-path',
                         type=str,
-                        default='./output.avi',
+                        default=DEFAULT_YOLO_VIDEO_OUTPUT_PATH,
                         help='The path of the output video file. '
-                             'Default is: ./output.avi.')                            
+                             'Default is: ./output.mp4.')                            
     
     parser.add_argument('-w', '--weights',
                         type=str,
-                        default='./config/yolov3.weights',
+                        default=DEFAULT_YOLO_WEIGHTS_SETTING,
                         help='Path to the file which contains the '
                              'weights for YOLOv3.')
     
@@ -189,13 +211,13 @@ def check_parsed(args):
 
     # Download the YOLOv3 models if needed
     if args.download_model:
-    	download_model()
+    	download_model(args)
 
     if args.clear_outputs is True:
         print("[INFO] Clearing Outputs")
         clear_outputs(args.save_path, args.csv_save)
 
-def download_model():
+def download_model(args):
     link = 'https://pjreddie.com/media/files/yolov3.weights'
     
     print("[INFO] Downloading YOLOv3 Model...")
@@ -223,7 +245,8 @@ def download_model():
                     show_progress_bar(data_length, total_length, 0, 2e-7)
         print("\n[SUCCESS] YOLOv3 Model Downloaded...")
     else:
-        print("[ERROR] Unknown platform. Download link through https://pjreddie.com/media/files/yolov3.weights. Exiting...")
+        print("[ERROR] Unknown platform. "
+        	  "Download link through https://pjreddie.com/media/files/yolov3.weights. Exiting...")
         sys.exit()
 
 def clear_outputs(output_path, csv_path):

@@ -12,10 +12,25 @@ def main():
 
     if args.process is True:
         # Initialize labels, colors, and pretrain model
-        labels, colors, net, layer_names = init(args.labels, args.config, args.weights)
+        labels, colors, net, layer_names = init(args.labels, 
+        										args.config, 
+        										args.weights)
 
         # Extract images (using YOLO)
-        process(args.image_path, args.video_path, args.output_name, args.save_path, args.delay_time, args.save_video, args.option, args.video_output_path, args.confidence, args.threshold, labels, colors, net, layer_names)
+        process(args.image_path, 
+        		args.video_path, 
+        		args.output_name, 
+        		args.save_path, 
+        		args.delay_time, 
+        		args.save_video, 
+        		args.option, 
+        		args.video_output_path, 
+        		args.confidence, 
+        		args.threshold, 
+        		labels, 
+        		colors, 
+        		net, 
+        		layer_names)
 
     if args.create_bucket is True:
         # Create AWS bucket
@@ -31,7 +46,7 @@ def main():
         get_csv(args.csv_save, args.bucket_name)
 
     if args.send_batch is True:
-        # Once CSV file is made, parse it, create CSV in proper format, and upload it to MTurk as a batch
+        # Once CSV file is made, parse it, create CSV in proper format, and upload it to MTurk
         # WARNING: The most recent csv file in the directory will be sent
         send_batch(args.csv_save)
 

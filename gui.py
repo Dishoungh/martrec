@@ -42,16 +42,28 @@ class Application:
 
 		self.processLabel = Label(self.window, text="Process?: ")
 		self.processLabel.grid(row=2, column=1)
-		self.processYesRadioButton = Radiobutton(self.window, text="Yes", variable=self.processVar, value=1)
+		self.processYesRadioButton = Radiobutton(self.window, 
+												 text="Yes", 
+												 variable=self.processVar, 
+												 value=1)
 		self.processYesRadioButton.grid(row=2, column=3)
-		self.processNoRadioButton  = Radiobutton(self.window, text="No", variable=self.processVar, value=0)
+		self.processNoRadioButton  = Radiobutton(self.window, 
+												 text="No", 
+												 variable=self.processVar, 
+												 value=0)
 		self.processNoRadioButton.grid(row=2, column=4)
 
 		self.videoorimgLabel = Label(self.window, text="Image or Video?: ")
 		self.videoorimgLabel.grid(row=3, column=1)
-		self.videoimgImageRadioButton = Radiobutton(self.window, text="Image", variable=self.videoorimgVar, value=1)
+		self.videoimgImageRadioButton = Radiobutton(self.window, 
+													text="Image", 
+													variable=self.videoorimgVar, 
+													value=1)
 		self.videoimgImageRadioButton.grid(row=3, column=3)
-		self.videoimgVideoRadioButton = Radiobutton(self.window, text="Video", variable=self.videoorimgVar, value=0)
+		self.videoimgVideoRadioButton = Radiobutton(self.window, 
+													text="Video", 
+													variable=self.videoorimgVar, 
+													value=0)
 		self.videoimgVideoRadioButton.grid(row=3, column=4)
 
 		self.pathLabel = Label(self.window, text="Path: ")
@@ -61,15 +73,15 @@ class Application:
 		self.pathButton = Button(self.window, text="...", command=lambda:self.browse())
 		self.pathButton.grid(row=4, column=3)
 
-		self.delayLabel = Label(self.window, text="Delay Time [1-1000]: ")
-		self.delayLabel.grid(row=5, column=1)
-		self.delayEntry = Entry(self.window, width=5)
-		self.delayEntry.grid(row=5, column=3)
+		#self.delayLabel = Label(self.window, text="Delay Time [1-1000]: ")
+		#self.delayLabel.grid(row=5, column=1)
+		#self.delayEntry = Entry(self.window, width=5)
+		#self.delayEntry.grid(row=5, column=3)
 
-		self.optionLabel = Label(self.window, text="Extraction Option [0-3]: ")
-		self.optionLabel.grid(row=6, column=1)
-		self.optionEntry = Entry(self.window, width=5)
-		self.optionEntry.grid(row=6, column=3)
+		#self.optionLabel = Label(self.window, text="Extraction Option [0-3]: ")
+		#self.optionLabel.grid(row=6, column=1)
+		#self.optionEntry = Entry(self.window, width=5)
+		#self.optionEntry.grid(row=6, column=3)
 
 		self.nameLabel = Label(self.window, text="Output Name: ")
 		self.nameLabel.grid(row=7, column=1)
@@ -78,9 +90,15 @@ class Application:
 
 		self.saveVideoLabel = Label(self.window, text="Save Video?: ")
 		self.saveVideoLabel.grid(row=8, column=1)
-		self.saveVideoYesRadioButton = Radiobutton(self.window, text="Yes", variable=self.saveVideoVar, value=1)
+		self.saveVideoYesRadioButton = Radiobutton(self.window, 
+												   text="Yes", 
+												   variable=self.saveVideoVar, 
+												   value=1)
 		self.saveVideoYesRadioButton.grid(row=8, column=3)
-		self.saveVideoNoRadioButton  = Radiobutton(self.window, text="No", variable=self.saveVideoVar, value=0)
+		self.saveVideoNoRadioButton  = Radiobutton(self.window, 
+												   text="No", 
+												   variable=self.saveVideoVar, 
+												   value=0)
 		self.saveVideoNoRadioButton.grid(row=8, column=4)
 
 
@@ -90,16 +108,28 @@ class Application:
 
 		self.configureLabel = Label(self.window, text="Configure AWS?: ")
 		self.configureLabel.grid(row=10, column=1)
-		self.configureYesRadioButton = Radiobutton(self.window, text="Yes", variable=self.configureVar, value=1)
+		self.configureYesRadioButton = Radiobutton(self.window, 
+												   text="Yes", 
+												   variable=self.configureVar, 
+												   value=1)
 		self.configureYesRadioButton.grid(row=10, column=3)
-		self.configureNoRadioButton  = Radiobutton(self.window, text="No", variable=self.configureVar, value=0)
+		self.configureNoRadioButton  = Radiobutton(self.window, 
+												   text="No", 
+												   variable=self.configureVar, 
+												   value=0)
 		self.configureNoRadioButton.grid(row=10, column=4)
 
 		self.createBucketLabel = Label(self.window, text="Create Bucket?: ")
 		self.createBucketLabel.grid(row=11, column=1)
-		self.createBucketYesRadioButton = Radiobutton(self.window, text="Yes", variable=self.createBucketVar, value=1)
+		self.createBucketYesRadioButton = Radiobutton(self.window, 
+													  text="Yes", 
+													  variable=self.createBucketVar, 
+													  value=1)
 		self.createBucketYesRadioButton.grid(row=11, column=3)
-		self.createBucketNoRadioButton  = Radiobutton(self.window, text="No", variable=self.createBucketVar, value=0)
+		self.createBucketNoRadioButton  = Radiobutton(self.window, 
+													  text="No", 
+													  variable=self.createBucketVar, 
+													  value=0)
 		self.createBucketNoRadioButton.grid(row=11, column=4)
 
 		self.bucketLabel = Label(self.window, text="Bucket Name: ")
@@ -109,16 +139,28 @@ class Application:
 
 		self.sendDataLabel = Label(self.window, text="Send Data?: ")
 		self.sendDataLabel.grid(row=13, column=1)
-		self.sendDataYesRadioButton = Radiobutton(self.window, text="Yes", variable=self.sendDataVar, value=1)
+		self.sendDataYesRadioButton = Radiobutton(self.window, 
+												  text="Yes", 
+												  variable=self.sendDataVar, 
+												  value=1)
 		self.sendDataYesRadioButton.grid(row=13, column=3)
-		self.sendDataNoRadioButton  = Radiobutton(self.window, text="No", variable=self.sendDataVar, value=0)
+		self.sendDataNoRadioButton  = Radiobutton(self.window, 
+												  text="No", 
+												  variable=self.sendDataVar, 
+												  value=0)
 		self.sendDataNoRadioButton.grid(row=13, column=4)
 
 		self.generateCSVLabel = Label(self.window, text="Generate CSV?: ")
 		self.generateCSVLabel.grid(row=14, column=1)
-		self.generateCSVYesRadioButton = Radiobutton(self.window, text="Yes", variable=self.generateCSVVar, value=1)
+		self.generateCSVYesRadioButton = Radiobutton(self.window, 
+													 text="Yes", 
+													 variable=self.generateCSVVar, 
+													 value=1)
 		self.generateCSVYesRadioButton.grid(row=14, column=3)
-		self.generateCSVNoRadioButton  = Radiobutton(self.window, text="No", variable=self.generateCSVVar, value=0)
+		self.generateCSVNoRadioButton  = Radiobutton(self.window, 
+													 text="No", 
+													 variable=self.generateCSVVar, 
+													 value=0)
 		self.generateCSVNoRadioButton.grid(row=14, column=4)
 
 		######## Bottom Buttons ##########
@@ -169,8 +211,6 @@ class Application:
 		processflag = self.processVar.get()
 		vidimg      = self.videoorimgVar.get()
 		filename    = self.pathText.get("1.0", 'end-1c')
-		delay       = int(self.delayEntry.get())
-		option      = int(self.optionEntry.get())
 		outname     = self.nameEntry.get()
 		savevid     = self.saveVideoVar.get()
 		config      = self.configureVar.get()
@@ -189,51 +229,95 @@ class Application:
 					return
 				else:
 					try:
-						labels, colors, net, layer_names = init(labelfile='./config/coco-labels', config='./config/yolov3', weights='./config/yolov3.weights')
-						process(image_path=filename, video_path=None, output_name=outname, save_path='./output_data/', delay_time=100, save_video=False, option=0, video_output_path=None, confidence=0.5, threshold=0.3 , labels=labels, colors=colors, net=net, layer_names=layer_names)		
+						labels, colors, net, layer_names = init(labelfile='./config/coco-labels', 
+																config='./config/yolov3.cfg', 
+																weights='./config/yolov3.weights')
+																
+						process(image_path=filename, 
+								video_path=None, 
+								output_name='output', 
+								save_path='./output_data/', 
+								delay_time=100, 
+								save_video=False, 
+								option=0, 
+								video_output_path='./output.avi', 
+								confidence=0.5, 
+								threshold=0.3, 
+								labels=labels, 
+								colors=colors, 
+								net=net, 
+								layer_names=layer_names)
+								
 					except Exception as err:
-						messagebox.showerror("Processing Error", err)
+						messagebox.showerror("Image Processing Error", err)
 			else:													# Video
 				if ('.mp4' not in filename) and ('.avi' not in filename):
 					messagebox.showerror("Invalid File Extension for Video", "You've chosen to process a file that isn't a .mp4 for video processing.")
 					return
-				else:
-					if ((delay < 1) or (delay > 1000)) and (delay is not None):
-						messageboxbox.showerror("Invalid Delay Setting", "The value for 'Delay Time' is not between 1 and 1000.")
-						return
-					elif ((option < 0) or (option > 3)) and (option is not None):
-						messagebox.showerror("Invalid Image Extraction Option Setting", "The value for 'Extraction Option' is not between 0 and 3.")
-						return
-					else:
-						if (delay is None):
-							delay = 100
-						elif (option is None):
-							option = 0
-							
-						try:
-							labels, colors, net, layer_names = init(labelfile='./config/coco-labels', config='./config/yolov3', weights='./config/yolov3.weights')
-							process(image_path=None, video_path=filename, output_name=outname, save_path='./output_data/', delay_time=delay, save_video=False, option=option, video_output_path='./output.mp4', confidence=0.5, threshold=0.3 , labels=labels, colors=colors, net=net, layer_names=layer_names)		
-						except Exception as err:
-							messagebox.showerror("Processing Error", err)
+				else:	
+					try:
+						labels, colors, net, layer_names = init(labelfile='./config/coco-labels', 
+																config='./config/yolov3.cfg', 
+																weights='./config/yolov3.weights')
+						if savevid == 0:
+							process(image_path=None, 
+									video_path=filename, 
+									output_name='output', 
+									save_path='./output_data/', 
+									delay_time=100, 
+									save_video=False, 
+									option=0, 
+									video_output_path='./output.avi', 
+									confidence=0.5, 
+									threshold=0.3, 
+									labels=labels, 
+									colors=colors, 
+									net=net, 
+									layer_names=layer_names)
+						else:
+							process(image_path=None, 
+									video_path=filename, 
+									output_name='output', 
+									save_path='./output_data/', 
+									delay_time=100, 
+									save_video=True, 
+									option=0, 
+									video_output_path='./output.avi', 
+									confidence=0.5, 
+									threshold=0.3, 
+									labels=labels, 
+									colors=colors, 
+									net=net, 
+									layer_names=layer_names)
+					except Exception as err:
+						messagebox.showerror("Video Processing Error", err)
 						
 		if (config == 1):
-			configure_aws()
+			try:
+				configure_aws()
+			except Exception as err:
+				messagebox.showerror("AWS Configuration Error", err)
 					
 		if ((buckname is None) and ((createbuck == 1) or (senddata == 1) or (gencsv == 1))):
-			messagebox.showerror("Unspecified Bucket Name", "You must specify a bucket name for AWS to apply the commands")
+			messagebox.showerror("Unspecified Bucket Name", 
+								"You must specify a bucket name for AWS to apply the commands")
 			return
 		else:
-			if (createbuck == 1):
-				create_bucket(buckname)
-				set_cors(buckname, 'config/cors.json')
-			elif (senddata == 1):
-				send_to_s3('./output_data/', buckname)
-			elif (gencsv == 1):
-				get_csv('./csv_files', buckname)
+			try:
+				if (createbuck == 1):
+					create_bucket(buckname)
+					set_cors(buckname, 'config/cors.json')
+				elif (senddata == 1):
+					send_to_s3('./output_data/', buckname)
+				elif (gencsv == 1):
+					get_csv('./csv_files', buckname)
+			except Exception as err:
+				messagebox.showerror("AWS Function Error", err)
 				
 				
 		if (processflag == 0) and ((buckname is None) or ((createbuck == 0) and (senddata == 0) and (gencsv == 0))):
-			messagebox.showerror("Nothing Done", "You chose not to process a video/image nor use any AWS functions.")
+			messagebox.showerror("Nothing Done", 
+								"You chose not to process a video/image nor use any AWS functions.")
 				
 		return
 
