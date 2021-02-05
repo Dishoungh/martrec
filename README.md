@@ -15,11 +15,15 @@ Crowdsourcing processes can be tedious to setup. You'll have to upload the data 
 - Prerequisites
   - The repo was built and tested on Python 3.7+. Make sure you have python3-pip installed and install the required packages. (Use pip3 if you have Python 2 installed so the system doesn't get confused)
     ```sh
-    pip3 install opencv-python numpy awscli
+    pip install opencv-python numpy awscli
+    ```
+  - Tkinter, a Python GUI library, should come with most Python distributions. In case if you don't have Tkinter, you can install it using:
+    ```sh
+    sudo apt install python3-tk (Ubuntu)
     ```
   - You may need to also pip3 install "requests" if you're on Windows in order to download the yolov3 weights model.
     ```sh
-    pip3 install requests
+    pip install requests
     ```
 
 - Cloning the Repo
@@ -42,13 +46,13 @@ Crowdsourcing processes can be tedious to setup. You'll have to upload the data 
 ## Usage
 To ensure martrec is working. Run:
 ```sh
-python3 martrec.py -h
+python martrec.py -h
 ```
 This command pulls up the help menu that gives a list of valid commands to the CLI. An example of this can be viewed in Screenshot (1).
 
 Many of the values for the arguments have defaults. If you are first configuring martrec and would like to start processing images, download the yolov3.weights file if you haven't already by issuing this command:  
 ```sh
-python3 martrec.py --download-model=True
+python martrec.py --download-model=True
 ```
 This will send an HTTP request to download the yolov3.weights to the specified config folder. Screenshot (2) demonstrates this functionality.  
 
@@ -56,7 +60,7 @@ To process videos or images, I recommend creating two folders for martrec to fin
 
 The command to process videos/images:  
 ```sh
-python3 martrec.py --process=True --[video-path/image-path]='/path/to/file' --output-name='name' --option=option
+python martrec.py --process=True --[video-path/image-path]='/path/to/file' --output-name='name' --option=option
 ```
 
 This command uses YOLOv3 to process the image or video and outputs image file(s) and every time a truck or car is detected, the script will extract the image as whatever is specified in --output-name. What --option does is specify how the extracted image should be saved. Option is an integer value from 0 to 2. By default, option is 0. Screenshot (4) demonstrates this functionality.
@@ -66,7 +70,7 @@ This command uses YOLOv3 to process the image or video and outputs image file(s)
   
  The command to create an AWS bucket, send extracted images to the specified bucket, and create a .csv file is:  
  ```sh
- python3 martrec.py --create-bucket=True --bucket-name='awsbucketname' --send-images=True --generate-csv=True
+ python martrec.py --create-bucket=True --bucket-name='awsbucketname' --send-images=True --generate-csv=True
  ```
  
 Screenshots (5), (6), (7), (8) all show the functionality of the command. In Screenshot 6, a bucket has been created with the objects in 7. Screenshot 8 shows that the objects' public URLs have been extracted into a .csv file for Mechanical Turk to create HITs. 
