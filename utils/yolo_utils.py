@@ -30,7 +30,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
 
     # Do inference with given image
     if image_path:
-	    print('[INFO] Starting image processing...')
+        print('[INFO] Starting image processing...')
 
         if not os.path.exists(image_path):
             print("[ERROR] Image path does not exist. Exiting...")
@@ -47,7 +47,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
             img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
             save_image(img, output_name, save_path)
     elif video_path:
-	    print('[INFO] Starting video processing...')
+        print('[INFO] Starting video processing...')
     
         if output_name is None:
             print("[ERROR] No output name specified. Exiting...")
