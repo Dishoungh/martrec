@@ -42,28 +42,28 @@ class Application:
 
 		self.processLabel = Label(self.window, text="Process?: ")
 		self.processLabel.grid(row=2, column=1)
-		self.processYesRadioButton = Radiobutton(self.window, 
-												 text="Yes", 
-												 variable=self.processVar, 
-												 value=1)
+		self.processYesRadioButton = Radiobutton(self.window,
+                                                         text="Yes",
+                                                         variable=self.processVar,
+                                                         value=1)
 		self.processYesRadioButton.grid(row=2, column=3)
-		self.processNoRadioButton  = Radiobutton(self.window, 
-												 text="No", 
-												 variable=self.processVar, 
-												 value=0)
+		self.processNoRadioButton  = Radiobutton(self.window,
+                                                         text="No",
+                                                         variable=self.processVar,
+                                                         value=0)
 		self.processNoRadioButton.grid(row=2, column=4)
 
 		self.videoorimgLabel = Label(self.window, text="Image or Video?: ")
 		self.videoorimgLabel.grid(row=3, column=1)
-		self.videoimgImageRadioButton = Radiobutton(self.window, 
-													text="Image", 
-													variable=self.videoorimgVar, 
-													value=1)
+		self.videoimgImageRadioButton = Radiobutton(self.window,
+							    text="Image",
+							    variable=self.videoorimgVar,
+							    value=1)
 		self.videoimgImageRadioButton.grid(row=3, column=3)
 		self.videoimgVideoRadioButton = Radiobutton(self.window, 
-													text="Video", 
-													variable=self.videoorimgVar, 
-													value=0)
+							    text="Video", 
+							    variable=self.videoorimgVar, 
+							    value=0)
 		self.videoimgVideoRadioButton.grid(row=3, column=4)
 
 		self.pathLabel = Label(self.window, text="Path: ")
@@ -90,15 +90,15 @@ class Application:
 
 		self.saveVideoLabel = Label(self.window, text="Save Video?: ")
 		self.saveVideoLabel.grid(row=8, column=1)
-		self.saveVideoYesRadioButton = Radiobutton(self.window, 
-												   text="Yes", 
-												   variable=self.saveVideoVar, 
-												   value=1)
+		self.saveVideoYesRadioButton = Radiobutton(self.window,
+						           text="Yes", 
+							   variable=self.saveVideoVar, 
+							   value=1)
 		self.saveVideoYesRadioButton.grid(row=8, column=3)
-		self.saveVideoNoRadioButton  = Radiobutton(self.window, 
-												   text="No", 
-												   variable=self.saveVideoVar, 
-												   value=0)
+		self.saveVideoNoRadioButton  = Radiobutton(self.window,
+							   text="No",
+							   variable=self.saveVideoVar, 
+							   value=0)
 		self.saveVideoNoRadioButton.grid(row=8, column=4)
 
 
@@ -108,28 +108,28 @@ class Application:
 
 		self.configureLabel = Label(self.window, text="Configure AWS?: ")
 		self.configureLabel.grid(row=10, column=1)
-		self.configureYesRadioButton = Radiobutton(self.window, 
-												   text="Yes", 
-												   variable=self.configureVar, 
-												   value=1)
+		self.configureYesRadioButton = Radiobutton(self.window,
+							   text="Yes", 
+							   variable=self.configureVar, 
+							   value=1)
 		self.configureYesRadioButton.grid(row=10, column=3)
-		self.configureNoRadioButton  = Radiobutton(self.window, 
-												   text="No", 
-												   variable=self.configureVar, 
-												   value=0)
+		self.configureNoRadioButton  = Radiobutton(self.window,
+							   text="No", 
+							   variable=self.configureVar, 
+							   value=0)
 		self.configureNoRadioButton.grid(row=10, column=4)
 
 		self.createBucketLabel = Label(self.window, text="Create Bucket?: ")
 		self.createBucketLabel.grid(row=11, column=1)
-		self.createBucketYesRadioButton = Radiobutton(self.window, 
-													  text="Yes", 
-													  variable=self.createBucketVar, 
-													  value=1)
+		self.createBucketYesRadioButton = Radiobutton(self.window,
+							      text="Yes", 
+							      variable=self.createBucketVar, 
+							      value=1)
 		self.createBucketYesRadioButton.grid(row=11, column=3)
 		self.createBucketNoRadioButton  = Radiobutton(self.window, 
-													  text="No", 
-													  variable=self.createBucketVar, 
-													  value=0)
+							      text="No", 
+							      variable=self.createBucketVar, 
+							      value=0)
 		self.createBucketNoRadioButton.grid(row=11, column=4)
 
 		self.bucketLabel = Label(self.window, text="Bucket Name: ")
@@ -140,27 +140,27 @@ class Application:
 		self.sendDataLabel = Label(self.window, text="Send Data?: ")
 		self.sendDataLabel.grid(row=13, column=1)
 		self.sendDataYesRadioButton = Radiobutton(self.window, 
-												  text="Yes", 
-												  variable=self.sendDataVar, 
-												  value=1)
+							  text="Yes", 
+							  variable=self.sendDataVar, 
+				    			  value=1)
 		self.sendDataYesRadioButton.grid(row=13, column=3)
 		self.sendDataNoRadioButton  = Radiobutton(self.window, 
-												  text="No", 
-												  variable=self.sendDataVar, 
-												  value=0)
+							  text="No", 
+							  variable=self.sendDataVar, 
+							  value=0)
 		self.sendDataNoRadioButton.grid(row=13, column=4)
 
 		self.generateCSVLabel = Label(self.window, text="Generate CSV?: ")
 		self.generateCSVLabel.grid(row=14, column=1)
 		self.generateCSVYesRadioButton = Radiobutton(self.window, 
-													 text="Yes", 
-													 variable=self.generateCSVVar, 
-													 value=1)
+							     text="Yes", 
+							     variable=self.generateCSVVar, 
+							     value=1)
 		self.generateCSVYesRadioButton.grid(row=14, column=3)
 		self.generateCSVNoRadioButton  = Radiobutton(self.window, 
-													 text="No", 
-													 variable=self.generateCSVVar, 
-													 value=0)
+							     text="No", 
+							     variable=self.generateCSVVar, 
+							     value=0)
 		self.generateCSVNoRadioButton.grid(row=14, column=4)
 
 		######## Bottom Buttons ##########
@@ -229,20 +229,20 @@ class Application:
 					return
 				else:
 					try:
-						labels, colors, net, layer_names = init(labelfile='./config/coco-labels', 
-																config='./config/yolov3.cfg', 
-																weights='./config/yolov3.weights')
+						labels, colors, net, layer_names = init(labelfile=utils.martrec_utils.DEFAULT_YOLO_LABELS_SETTING, 
+																config=utils.martrec_utils.DEFAULT_YOLO_CONFIG_SETTING, 
+																weights=utils.martrec_utils.DEFAULT_YOLO_WEIGHTS_SETTING)
 																
 						process(image_path=filename, 
 								video_path=None, 
-								output_name='output', 
-								save_path='./output_data/', 
-								delay_time=100, 
-								save_video=False, 
-								option=0, 
-								video_output_path='./output.avi', 
-								confidence=0.5, 
-								threshold=0.3, 
+								output_name=utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING, 
+								save_path=utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, 
+								delay_time=utils.martrec_utils.DEFAULT_YOLO_DELAY_TIME_SETTING, 
+								save_video=utils.martrec_utils.DEFAULT_YOLO_SAVE_VIDEO_SETTING, 
+								option=utils.martrec_utils.DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING, 
+								video_output_path=utils.martrec_utils.DEFAULT_YOLO_VIDEO_OUTPUT_PATH, 
+								confidence=utils.martrec_utils.DEFAULT_YOLO_CONFIDENCE_SETTING, 
+								threshold=utils.martrec_utils.DEFAULT_YOLO_THRESHOLD_SETTING, 
 								labels=labels, 
 								colors=colors, 
 								net=net, 
@@ -256,20 +256,20 @@ class Application:
 					return
 				else:	
 					try:
-						labels, colors, net, layer_names = init(labelfile='./config/coco-labels', 
-																config='./config/yolov3.cfg', 
-																weights='./config/yolov3.weights')
+						labels, colors, net, layer_names = init(labelfile=utils.martrec_utils.DEFAULT_YOLO_LABELS_SETTING, 
+																config=utils.martrec_utils.DEFAULT_YOLO_CONFIG_SETTING, 
+																weights=utils.martrec_utils.DEFAULT_YOLO_WEIGHTS_SETTING)
 						if savevid == 0:
 							process(image_path=None, 
 									video_path=filename, 
-									output_name='output', 
-									save_path='./output_data/', 
-									delay_time=100, 
-									save_video=False, 
-									option=0, 
-									video_output_path='./output.avi', 
-									confidence=0.5, 
-									threshold=0.3, 
+									output_name=utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING, 
+									save_path=utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, 
+									delay_time=utils.martrec_utils.DEFAULT_YOLO_DELAY_TIME_SETTING, 
+									save_video=utils.martrec_utils.DEFAULT_YOLO_SAVE_VIDEO_SETTING, 
+									option=utils.martrec_utils.DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING, 
+									video_output_path=utils.martrec_utils.DEFAULT_YOLO_VIDEO_OUTPUT_PATH, 
+									confidence=utils.martrec_utils.DEFAULT_YOLO_CONFIDENCE_SETTING, 
+									threshold=utils.martrec_utils.DEFAULT_YOLO_THRESHOLD_SETTING, 
 									labels=labels, 
 									colors=colors, 
 									net=net, 
@@ -277,14 +277,14 @@ class Application:
 						else:
 							process(image_path=None, 
 									video_path=filename, 
-									output_name='output', 
-									save_path='./output_data/', 
-									delay_time=100, 
+									output_name=utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING, 
+									save_path=utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, 
+									delay_time=utils.martrec_utils.DEFAULT_YOLO_DELAY_TIME_SETTING, 
 									save_video=True, 
-									option=0, 
-									video_output_path='./output.avi', 
-									confidence=0.5, 
-									threshold=0.3, 
+									option=utils.martrec_utils.DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING, 
+									video_output_path=utils.martrec_utils.DEFAULT_YOLO_VIDEO_OUTPUT_PATH, 
+									confidence=utils.martrec_utils.DEFAULT_YOLO_CONFIDENCE_SETTING, 
+									threshold=utils.martrec_utils.DEFAULT_YOLO_THRESHOLD_SETTING, 
 									labels=labels, 
 									colors=colors, 
 									net=net, 
@@ -306,11 +306,11 @@ class Application:
 			try:
 				if (createbuck == 1):
 					create_bucket(buckname)
-					set_cors(buckname, 'config/cors.json')
+					set_cors(buckname, utils.martrec_utils.DEFAULT_AWS_CORS_FILE_SETTING)
 				elif (senddata == 1):
-					send_to_s3('./output_data/', buckname)
+					send_to_s3(utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, buckname)
 				elif (gencsv == 1):
-					get_csv('./csv_files', buckname)
+					get_csv(utils.martrec_utils.DEFAULT_AWS_CSV_FILE_SETTING, buckname)
 			except Exception as err:
 				messagebox.showerror("AWS Function Error", err)
 				
