@@ -30,7 +30,9 @@ def main():
         		labels, 
         		colors, 
         		net, 
-        		layer_names)
+        		layer_names,
+                gui=False,
+                gui_obj=None)
 
     if args.create_bucket is True:
         # Create AWS bucket

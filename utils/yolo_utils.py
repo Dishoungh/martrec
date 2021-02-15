@@ -22,7 +22,7 @@ def init(labelfile, config, weights):
     return labels, colors, net, layer_names
 
 
-def process(image_path, video_path, output_name, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, labels, colors, net, layer_names):
+def process(image_path, video_path, output_name, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, labels, colors, net, layer_names, gui, gui_obj):
     # If both image and video files are given then raise error
 
     if image_path is None and video_path is None:
@@ -130,7 +130,12 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                 end = time.time()
                 timings = np.append(timings, (end - start))
                 show_progress_bar(timings.size, total, num_images, np.average(timings))
-
+                
+                # Return progress bar value
+                if gui is True:
+                    gui_obj.bar['value'] = (timings.size / total) * 100
+                    gui_obj.bar.update_idletasks()
+                		
             # End process
             print("\n[INFO] Cleaning up...")
             if writer is not None:

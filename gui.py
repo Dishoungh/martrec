@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import filedialog, messagebox
-from utils.martrec_utils import download_model
+from tkinter import filedialog, messagebox, ttk 
+import utils.martrec_utils
 from utils.yolo_utils import *
 from utils.aws_utils import *
 
@@ -35,11 +35,11 @@ class Application:
 		######### Welcome Label ##########
 		self.welcomeLabel = Label(self.window, text="Welcome to the Martrec GUI!")
 		self.welcomeLabel.grid(row=0, column=2)
-
+                
 		####### YOLO Configuration #######
 		self.yoloLabel = Label(self.window, text="YOLO Configuration")
 		self.yoloLabel.grid(row=1, column=0)
-
+                
 		self.processLabel = Label(self.window, text="Process?: ")
 		self.processLabel.grid(row=2, column=1)
 		self.processYesRadioButton = Radiobutton(self.window,
@@ -52,7 +52,7 @@ class Application:
                                                          variable=self.processVar,
                                                          value=0)
 		self.processNoRadioButton.grid(row=2, column=4)
-
+                
 		self.videoorimgLabel = Label(self.window, text="Image or Video?: ")
 		self.videoorimgLabel.grid(row=3, column=1)
 		self.videoimgImageRadioButton = Radiobutton(self.window,
@@ -65,29 +65,29 @@ class Application:
 							    variable=self.videoorimgVar, 
 							    value=0)
 		self.videoimgVideoRadioButton.grid(row=3, column=4)
-
+                
 		self.pathLabel = Label(self.window, text="Path: ")
 		self.pathLabel.grid(row=4, column=1)
 		self.pathText = Text(self.window, height=1, width=50)
 		self.pathText.grid(row=4, column=2)
 		self.pathButton = Button(self.window, text="...", command=lambda:self.browse())
 		self.pathButton.grid(row=4, column=3)
-
+                
 		#self.delayLabel = Label(self.window, text="Delay Time [1-1000]: ")
 		#self.delayLabel.grid(row=5, column=1)
 		#self.delayEntry = Entry(self.window, width=5)
 		#self.delayEntry.grid(row=5, column=3)
-
+                
 		#self.optionLabel = Label(self.window, text="Extraction Option [0-3]: ")
 		#self.optionLabel.grid(row=6, column=1)
 		#self.optionEntry = Entry(self.window, width=5)
 		#self.optionEntry.grid(row=6, column=3)
-
+                
 		self.nameLabel = Label(self.window, text="Output Name: ")
 		self.nameLabel.grid(row=7, column=1)
-		self.nameEntry = Entry(self.window, width=5)
+		self.nameEntry = Entry(self.window, width=15)
 		self.nameEntry.grid(row=7, column=3)
-
+                
 		self.saveVideoLabel = Label(self.window, text="Save Video?: ")
 		self.saveVideoLabel.grid(row=8, column=1)
 		self.saveVideoYesRadioButton = Radiobutton(self.window,
@@ -100,12 +100,12 @@ class Application:
 							   variable=self.saveVideoVar, 
 							   value=0)
 		self.saveVideoNoRadioButton.grid(row=8, column=4)
-
-
+                
+                
 		#######  AWS Configuration #######
 		self.awsLabel = Label(self.window, text="AWS Configuration")
 		self.awsLabel.grid(row=9, column=0)
-
+                
 		self.configureLabel = Label(self.window, text="Configure AWS?: ")
 		self.configureLabel.grid(row=10, column=1)
 		self.configureYesRadioButton = Radiobutton(self.window,
@@ -118,7 +118,7 @@ class Application:
 							   variable=self.configureVar, 
 							   value=0)
 		self.configureNoRadioButton.grid(row=10, column=4)
-
+                
 		self.createBucketLabel = Label(self.window, text="Create Bucket?: ")
 		self.createBucketLabel.grid(row=11, column=1)
 		self.createBucketYesRadioButton = Radiobutton(self.window,
@@ -131,12 +131,12 @@ class Application:
 							      variable=self.createBucketVar, 
 							      value=0)
 		self.createBucketNoRadioButton.grid(row=11, column=4)
-
+                
 		self.bucketLabel = Label(self.window, text="Bucket Name: ")
 		self.bucketLabel.grid(row=12, column=1)
-		self.bucketEntry = Entry(self.window, width=5)
+		self.bucketEntry = Entry(self.window, width=15)
 		self.bucketEntry.grid(row=12, column=3)
-
+                
 		self.sendDataLabel = Label(self.window, text="Send Data?: ")
 		self.sendDataLabel.grid(row=13, column=1)
 		self.sendDataYesRadioButton = Radiobutton(self.window, 
@@ -149,7 +149,7 @@ class Application:
 							  variable=self.sendDataVar, 
 							  value=0)
 		self.sendDataNoRadioButton.grid(row=13, column=4)
-
+                
 		self.generateCSVLabel = Label(self.window, text="Generate CSV?: ")
 		self.generateCSVLabel.grid(row=14, column=1)
 		self.generateCSVYesRadioButton = Radiobutton(self.window, 
@@ -162,14 +162,15 @@ class Application:
 							     variable=self.generateCSVVar, 
 							     value=0)
 		self.generateCSVNoRadioButton.grid(row=14, column=4)
-
+                
 		######## Bottom Buttons ##########
 		self.pathButton = Button(self.window, text="Start", command=lambda:self.execute())
 		self.pathButton.grid(row=15, column=2)
-
+                
 		self.pathButton = Button(self.window, text="Help", command=lambda:self.help())
 		self.pathButton.grid(row=16, column=2)
-		
+
+
 	def browse(self):
 		filename = filedialog.askopenfilename(initialdir="./", title="Select a File")
 		self.pathText.delete(1.0, END)
@@ -205,8 +206,6 @@ class Application:
 		helpText.insert("1.0", text)
 		okButton = Button(helpWin, text="Ok", command=helpWin.destroy).pack()							 
 
-
-
 	def execute(self):
 		processflag = self.processVar.get()
 		vidimg      = self.videoorimgVar.get()
@@ -220,7 +219,7 @@ class Application:
 		gencsv      = self.generateCSVVar.get()
 		
 		if outname is None:
-			outname = "output"
+			outname = utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING
 		
 		if (processflag == 1): 											# Use YOLOv3
 			if (vidimg == 1): 										# Image
@@ -235,7 +234,7 @@ class Application:
 																
 						process(image_path=filename, 
 								video_path=None, 
-								output_name=utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING, 
+								output_name=outname, 
 								save_path=utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, 
 								delay_time=utils.martrec_utils.DEFAULT_YOLO_DELAY_TIME_SETTING, 
 								save_video=utils.martrec_utils.DEFAULT_YOLO_SAVE_VIDEO_SETTING, 
@@ -246,7 +245,9 @@ class Application:
 								labels=labels, 
 								colors=colors, 
 								net=net, 
-								layer_names=layer_names)
+								layer_names=layer_names,
+                                gui=False,
+                                gui_obj=None)
 								
 					except Exception as err:
 						messagebox.showerror("Image Processing Error", err)
@@ -254,15 +255,25 @@ class Application:
 				if ('.mp4' not in filename) and ('.avi' not in filename):
 					messagebox.showerror("Invalid File Extension for Video", "You've chosen to process a file that isn't a .mp4 for video processing.")
 					return
-				else:	
+				else:
+					####### Cancel Button #####
+					self.cancel = Button(self.window,
+										 text="Cancel",
+										 command=lambda:
+					####### Progress Bar ######
+					self.bar = ttk.Progressbar(self.window,
+											   orient=HORIZONTAL,
+											   length=200,
+											   mode='determinate')
+					self.bar.grid(row=18, column=2)	
 					try:
 						labels, colors, net, layer_names = init(labelfile=utils.martrec_utils.DEFAULT_YOLO_LABELS_SETTING, 
 																config=utils.martrec_utils.DEFAULT_YOLO_CONFIG_SETTING, 
 																weights=utils.martrec_utils.DEFAULT_YOLO_WEIGHTS_SETTING)
 						if savevid == 0:
 							process(image_path=None, 
-									video_path=filename, 
-									output_name=utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING, 
+									video_path=filename,
+									output_name=outname, 
 									save_path=utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, 
 									delay_time=utils.martrec_utils.DEFAULT_YOLO_DELAY_TIME_SETTING, 
 									save_video=utils.martrec_utils.DEFAULT_YOLO_SAVE_VIDEO_SETTING, 
@@ -273,11 +284,13 @@ class Application:
 									labels=labels, 
 									colors=colors, 
 									net=net, 
-									layer_names=layer_names)
+									layer_names=layer_names,
+									gui=True,
+									gui_obj=self)
 						else:
 							process(image_path=None, 
 									video_path=filename, 
-									output_name=utils.martrec_utils.DEFAULT_YOLO_OUTPUT_NAME_SETTING, 
+									output_name=outname, 
 									save_path=utils.martrec_utils.DEFAULT_YOLO_SAVE_PATH_SETTING, 
 									delay_time=utils.martrec_utils.DEFAULT_YOLO_DELAY_TIME_SETTING, 
 									save_video=True, 
@@ -288,10 +301,12 @@ class Application:
 									labels=labels, 
 									colors=colors, 
 									net=net, 
-									layer_names=layer_names)
+									layer_names=layer_names,
+                                    gui=True,
+                                    gui_obj=self)
 					except Exception as err:
-						messagebox.showerror("Video Processing Error", err)
-						
+						messagebox.showerror("Video Processing Error", err)	
+					self.bar.grid_forget()					
 		if (config == 1):
 			try:
 				configure_aws()
@@ -317,7 +332,7 @@ class Application:
 				
 		if (processflag == 0) and ((buckname is None) or ((createbuck == 0) and (senddata == 0) and (gencsv == 0))):
 			messagebox.showerror("Nothing Done", 
-								"You chose not to process a video/image nor use any AWS functions.")
+								 "You chose not to process a video/image nor use any AWS functions.")
 				
 		return
 
