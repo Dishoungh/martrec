@@ -256,10 +256,6 @@ class Application:
 					messagebox.showerror("Invalid File Extension for Video", "You've chosen to process a file that isn't a .mp4 for video processing.")
 					return
 				else:
-					####### Cancel Button #####
-					self.cancel = Button(self.window,
-										 text="Cancel",
-										 command=lambda:
 					####### Progress Bar ######
 					self.bar = ttk.Progressbar(self.window,
 											   orient=HORIZONTAL,
