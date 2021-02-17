@@ -91,11 +91,3 @@ def set_cors(bucket_name, cors_file):
         print("[ERROR] {e}".format(e=err))
         sys.exit()
 
-def send_batch(csv_path):
-    # Get latest file in csv_path
-    files = os.listdir(csv_path)
-    target_file = max([os.path.join(csv_path, filename) for filename in files])
-
-    # Send csv file to MTurk
-    print(target_file)
-    print(target_file)
