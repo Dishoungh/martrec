@@ -12,25 +12,25 @@ def main():
 
     if args.process is True:
         # Initialize labels, colors, and pretrain model
-        labels, colors, net, layer_names = init(args.labels, 
-        										args.config, 
-        										args.weights)
+        labels, colors, net, layer_names = init(args.labels,
+        					args.config, 
+        					args.weights)
 
         # Extract images (using YOLO)
         process(args.image_path, 
-        		args.video_path, 
-        		args.output_name, 
-        		args.save_path, 
-        		args.delay_time, 
-        		args.save_video, 
-        		args.option, 
-        		args.video_output_path, 
-        		args.confidence, 
-        		args.threshold, 
-        		labels, 
-        		colors, 
-        		net, 
-        		layer_names,
+        	args.video_path, 
+        	args.output_name, 
+        	args.save_path, 
+        	args.delay_time, 
+        	args.save_video, 
+        	args.option, 
+        	args.video_output_path, 
+        	args.confidence, 
+        	args.threshold, 
+        	labels, 
+        	colors, 
+        	net, 
+        	layer_names,
                 gui=False,
                 gui_obj=None)
 

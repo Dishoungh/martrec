@@ -255,5 +255,5 @@ def clear_outputs(output_path, csv_path):
 
     for file in os.listdir(csv_path):
         os.remove(os.path.join(csv_path, file))
-
+    
     print("[SUCCESS] Cleared Output Files")
