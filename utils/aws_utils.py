@@ -2,7 +2,6 @@ import subprocess
 import os
 import time
 import csv
-import config.keys
 import sys
 import errno
 import platform
@@ -30,6 +29,8 @@ def configure_aws():
     else:
         print("[ERROR] AWS Configuration failed due to unknown platform detection. Exiting...")
         sys.exit()
+    
+    import config.keys
 
     for x in range(4):
         # Enter Access Key ID

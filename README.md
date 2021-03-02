@@ -3,6 +3,8 @@ A simple python script to automate the process of extracting images of trucks an
 
 Crowdsourcing processes can be tedious to setup. You'll have to upload the data somewhere and grab their URLs individually and compile them into a .csv file for Mechanical Turk to create HITs (Human Intelligence Tasks). This can take a while. The purpose of this repo is to automate most of that process and can be applied to multiple applications.
 
+While Martrec does support GUI using the TKinter package, it's recommended to use the CLI version instead of the GUI since the GUI doesn't have the full functionality of the CLI version.
+
 
 ## Tech/Framework Used
 <b>Built with</b>
@@ -56,11 +58,10 @@ python martrec.py --download-model=True
 ```
 This will send an HTTP request to download the yolov3.weights to the specified config folder. Screenshot (2) demonstrates this functionality.  
 
-To process videos or images, I recommend creating two folders for martrec to find the incoming file to process and to save output files into. By default, the script will look into the folders called "input_data" and "output_data". The script will also generate .csv files inside a folder called "csv_files". Create those folders inside the project folder. Your folders should look like screenshot (3). If you decide to name your folders something different, make sure to make the appropriate changes in the script by changing the 
-
+To process videos or images, I recommend creating two folders for martrec to find the incoming file to process and to save output files into. By default, the script will look into the folders called "input_data" and "output_data". The script will also generate .csv files inside a folder called "csv_files". Create those folders inside the project folder. Your folders should look like screenshot (3). By default, the repo should provide those folders now. As of this edit, Martrec should automatically process everything in "input_data" folder.
 The command to process videos/images:  
 ```sh
-python martrec.py --process=True --[video-path/image-path]='/path/to/file' --output-name='name' --option=option
+python martrec.py --process=True --option=option
 ```
 
 This command uses YOLOv3 to process the image or video and outputs image file(s) and every time a truck or car is detected, the script will extract the image as whatever is specified in --output-name. What --option does is specify how the extracted image should be saved. Option is an integer value from 0 to 2. By default, option is 0. Screenshot (4) demonstrates this functionality.

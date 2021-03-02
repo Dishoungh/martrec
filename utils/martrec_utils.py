@@ -22,7 +22,8 @@ DEFAULT_YOLO_MODEL_PATH_SETTING       = './config/'
 DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING = 0
 DEFAULT_YOLO_OUTPUT_NAME_SETTING      = 'output'
 DEFAULT_YOLO_PROCESS_SETTING          = False
-DEFAULT_YOLO_SAVE_PATH_SETTING        = './output_data/'
+DEFAULT_YOLO_INPUT_PATH_SETTING       = './input_data/'
+DEFAULT_YOLO_OUTPUT_PATH_SETTING      = './output_data/'
 DEFAULT_AWS_SEND_IMAGES_SETTING       = False
 DEFAULT_AWS_SEND_BATCH_SETTING        = False
 DEFAULT_YOLO_SAVE_VIDEO_SETTING       = False
@@ -102,6 +103,11 @@ def parse_arguments():
                         type=str,
                         default=DEFAULT_YOLO_IMAGE_PATH_SETTING,
                         help='The path to the image file to process.')
+                        
+    parser.add_argument('-ip', '--input-path',
+                        type=str,
+                        default=DEFAULT_YOLO_INPUT_PATH_SETTING,
+                        help='The path to process files.')         
     
     parser.add_argument('-l', '--labels',
                         type=str,
@@ -130,30 +136,30 @@ def parse_arguments():
                         type=str,
                         default=DEFAULT_YOLO_OUTPUT_NAME_SETTING,
                         help='Sets the name of the output image. Default is: output')
+                        
+    parser.add_argument('-op', '--output-path',
+                        type=str,
+                        default=DEFAULT_YOLO_OUTPUT_PATH_SETTING,
+                        help='Sets where to save output images. Default is: ./output_data/')
     
     parser.add_argument('-p', '--process',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_YOLO_PROCESS_SETTING,
                         help='Uses YOLOv3 to process a video file or image or webcam stream')                          
-    
-    parser.add_argument('-s', '--save-path',
-                        type=str,
-                        default='./output_data/',
-                        help='Sets where to save output images. Default is: ./output_data/')
     
     parser.add_argument('-s3', '--send-images',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_AWS_SEND_IMAGES_SETTING,
                         help='Sends images specified in --save-path to Amazon S3 after process')
     
     parser.add_argument('-sb', '--send-batch',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_AWS_SEND_BATCH_SETTING,
                         help='Sends CSV file in csv save path to MTurk')      
     
     parser.add_argument('-sv', '--save-video',
                         type=bool,
-                        default=False,
+                        default=DEFAULT_YOLO_SAVE_VIDEO_SETTING,
                         help='Save an output video file? Default is: False')
     
     parser.add_argument('-th', '--threshold',
@@ -185,8 +191,11 @@ def parse_arguments():
 
 def check_parsed(args):
     # Checks if directory from save path exists or not
-    if not os.path.isdir(args.save_path):
-        os.mkdir(args.save_path)
+    if not os.path.isdir(args.input_path):
+        os.mkdir(args.input_path)
+
+    if not os.path.isdir(args.output_path):
+        os.mkdir(args.output_path)
 
     if not os.path.isdir(args.csv_save):
         os.mkdir(args.csv_save)
@@ -197,7 +206,7 @@ def check_parsed(args):
         sys.exit()
 
     # Checks if there is a save path specified
-    if args.save_path is None:
+    if args.output_path is None:
         print("[ERROR] Invalid save path")
         sys.exit()
 
@@ -207,7 +216,7 @@ def check_parsed(args):
         sys.exit()
     else:
         if args.option != 3 and args.process is True:
-            print("[INFO] Images will be saved under: {sp}".format(sp=args.save_path))
+            print("[INFO] Images will be saved under: {sp}".format(sp=args.output_path))
 
     # Download the YOLOv3 models if needed
     if args.download_model:
@@ -215,7 +224,7 @@ def check_parsed(args):
 
     if args.clear_outputs is True:
         print("[INFO] Clearing Outputs")
-        clear_outputs(args.save_path, args.csv_save)
+        clear_outputs(args.output_path, args.csv_save)
 
 def download_model(args):
     link = 'https://pjreddie.com/media/files/yolov3.weights'

@@ -12,27 +12,51 @@ def main():
 
     if args.process is True:
         # Initialize labels, colors, and pretrain model
-        labels, colors, net, layer_names = init(args.labels,
-        					args.config, 
-        					args.weights)
+        labels, colors, net, layer_names, data = init(args.labels,
+        					      args.config, 
+        					      args.weights,
+                                                      args.input_path)
 
-        # Extract images (using YOLO)
-        process(args.image_path, 
-        	args.video_path, 
-        	args.output_name, 
-        	args.save_path, 
-        	args.delay_time, 
-        	args.save_video, 
-        	args.option, 
-        	args.video_output_path, 
-        	args.confidence, 
-        	args.threshold, 
-        	labels, 
-        	colors, 
-        	net, 
-        	layer_names,
-                gui=False,
-                gui_obj=None)
+        # Parse through Input Data Folder
+        for d in data:
+            if ('.png' in d) or ('.jpg' in d) or ('.jpeg' in d):
+                # Process Image
+                process(str(args.input_path + d),
+                        None,
+                        d[:d.find('.')],
+                        args.output_path,
+                        args.delay_time,
+                        args.save_video,
+                        args.option,
+                        args.video_output_path,
+                        args.confidence,
+                        args.threshold,
+                        labels,
+                        colors,
+                        net,
+                        layer_names,
+                        gui=False,
+                        gui_obj=None)
+            else:
+                if ('.mp4' in d) or ('.avi' in d):
+                    # Process Video
+                    process(None,
+                            str(args.input_path + d),
+                            d[:d.find('.')],
+                            args.output_path,
+                            args.delay_time,
+                            args.save_video,
+                            args.option,
+                            args.video_output_path,
+                            args.confidence,
+                            args.threshold,
+                            labels,
+                            colors,
+                            net,
+                            layer_names,
+                            gui=False,
+                            gui_obj=None)
+                            
 
     if args.create_bucket is True:
         # Create AWS bucket

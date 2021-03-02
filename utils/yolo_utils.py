@@ -5,7 +5,7 @@ import os
 import sys
 
 
-def init(labelfile, config, weights):
+def init(labelfile, config, weights, input_path):
     # Get the labels
     labels = open(labelfile).read().strip().split('\n')
 
@@ -19,7 +19,13 @@ def init(labelfile, config, weights):
     layer_names = net.getLayerNames()
     layer_names = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-    return labels, colors, net, layer_names
+    data = []
+    # Get everything from input path
+    for path in os.listdir(input_path):
+        if ('.png' in path) or ('.jpg' in path) or ('jpeg' in path) or ('.mp4' in path) or ('.avi' in path):
+            data.append(path)
+
+    return labels, colors, net, layer_names, data
 
 
 def process(image_path, video_path, output_name, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, labels, colors, net, layer_names, gui, gui_obj):
@@ -30,7 +36,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
 
     # Do inference with given image
     if image_path:
-        print('[INFO] Starting image processing...')
+        print('[INFO] Starting image processing of {ip}...'.format(ip=str(image_path)))
 
         if not os.path.exists(image_path):
             print("[ERROR] Image path does not exist. Exiting...")
@@ -47,14 +53,14 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
             img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
             save_image(img, output_name, save_path)
     elif video_path:
-        print('[INFO] Starting video processing...')
+        print('[INFO] Starting video processing of {vp}...'.format(vp=str(video_path)))
     
         if output_name is None:
             print("[ERROR] No output name specified. Exiting...")
             sys.exit()
 
         if not os.path.exists(video_path):
-            print("ERROR] Video path does not exist. Exiting...")
+            print("[ERROR] Video path does not exist. Exiting...")
             sys.exit()
 
         # Read the video
@@ -74,7 +80,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                 total = int(vid.get(cv.CAP_PROP_FRAME_COUNT))
             except:
                 try:
-                    total = int(vid.get(cv.cv.CV_CAP_PROP_FRAME_COUNT))
+                    total = int(vid.get(cv.CV_CAP_PROP_FRAME_COUNT))
                 except:
                     print("[WARNING] Have to count frames manually. This might take a while...")
                     total = count_frames_manual(vid)
@@ -115,11 +121,19 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                     except:
                         obj = None
 
-                    if ((obj == 'truck') or (obj == 'car')) and delay <= 0:
+                    if ((obj == 'truck') and (delay <= 0)):
+                        # Extract Timestamp from Video
+                        try:
+                            modified_name = output_name + ('_{time}'.format(time=str(int(vid.get(cv.CAP_PROP_POS_MSEC)))))
+                            # print(modified_name)
+                        except:
+                            # print("[ERROR] Failed to get timestamp of video")
+                            modified_name = output_name + '_?'
+
                         if (option == 0) or (option == 2):  # Save raw image
-                            save_image(raw_frame, output_name, save_path, True)
+                            save_image(raw_frame, modified_name, save_path, True)
                         elif (option == 1) or (option == 2):  # Save labeled image
-                            save_image(labeled_frame, output_name, save_path, False)
+                            save_image(labeled_frame, modified_name, save_path, False)
                         num_images += 1
                         delay = delay_time
 
