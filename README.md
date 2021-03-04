@@ -76,6 +76,66 @@ This command uses YOLOv3 to process the image or video and outputs image file(s)
  
 Screenshots (5), (6), (7), (8) all show the functionality of the command. In Screenshot 6, a bucket has been created with the objects in 7. Screenshot 8 shows that the objects' public URLs have been extracted into a .csv file for Mechanical Turk to create HITs. 
 
+## Commands
+- -aws, --configure-aws
+  - Initiates AWS configuration. Requires an ID, Secret Key, and Region name in the keys.py file
+- -bn, --bucket-name
+  - Specifies name of the S3 bucket 
+- -c, --confidence
+  - The model will reject boundaries which has a probability less than the confidence value
+- -cb, --create-bucket
+  - Creates AWS bucket
+- -cfg, --config
+  - Path to the configuration file for the YOLOv3 model
+- -co, --clear-outputs
+  - Clears the data in the output folder including any generated csv files  
+- -cor, --cors-file
+  - Specifies location of cors json file')
+- -csv, --csv-save
+  - Specifies where to save the AWS csv file
+- -dm, --download-model
+  - Set to True, if the model weights and configurations are not present on your local machine
+- -dt, --delay-time
+  - Sets the delay time for extracting images. Purpose of this is to not spam the output folder. Acceptable values are:   1-1000
+- -gen, --generate-csv
+  - Generates a CSV file, listing all objects in the specified AWS bucket
+- -i, --image-path
+  - The path to the image file to process.
+- -ip, --input-path
+  - The path to process files.
+- -l, --labels
+  - Path to the file having the labels in a new-line separated way.
+- -m, --model-path
+  - The directory where the model weights and configuration files are.
+- -o, --option
+  - Determines how the program will save images
+    - Options:
+      - 0 = Save Raw Image Only
+      - 1 = Save Labeled Image Only
+      - 2 = Save Both Raw and Labeled
+      - 3 = Save No Images
+      - Default: 0
+- -on, --output-name
+  - Sets the name of the output image. Default is: output
+- -op, --output-path
+  - Sets where to save output images. Default is: ./output_data/
+- -p, --process
+  - Uses YOLOv3 to process a video file or image or webcam stream            
+- -s3, --send-images
+  - Sends images specified in --save-path to Amazon S3 after process
+- -sb, --send-batch
+  - Sends CSV file in csv save path to MTurk
+- -sv, --save-video,
+  - Save an output video file? Default is: False
+- -th, --threshold
+  - The threshold to use when applying the Non-Max Suppression
+- -v, --video-path
+  - The path to the video file to process.
+- -vo, --video-output-path
+  - The path of the output video file. Default is: ./output.mp4.
+- -w, --weights
+  - Path to the file which contains the weights for YOLOv3.
+
 ## Screenshots
 (1) ![Alt text](https://user-images.githubusercontent.com/47036723/106171779-984a7e80-6157-11eb-85ff-f93928a3cd57.png "Help Menu")
 
