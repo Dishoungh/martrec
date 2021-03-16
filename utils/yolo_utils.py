@@ -132,8 +132,6 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                             # print("[ERROR] Failed to get timestamp of video")
                             modified_name = output_name + '_?'
 
-                        print("\nHeight:{h}\nWidth:{w}\n".format(h=boxHeight, w=boxWidth))
-
                         if (option == 0) or (option == 2):  # Save raw image
                             save_image(raw_frame, modified_name, save_path, True)
                         elif (option == 1) or (option == 2):  # Save labeled image
