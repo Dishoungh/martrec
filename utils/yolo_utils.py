@@ -2,6 +2,7 @@ import numpy as np
 import cv2 as cv
 import time
 import os
+import shutil
 import sys
 
 
@@ -66,6 +67,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
         # Read the video
         try:
             vid = cv.VideoCapture(video_path)
+            boxHeight, boxWidth = 0, 0
             height, width = None, None
             writer = None
         except:
@@ -113,7 +115,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                 # Time frame inference and show progress
                 start = time.time()
                 if delay <= 0 and labeled_frame is not None:
-                    labeled_frame, _, _, classids, _ = infer_image(net, layer_names, height, width,
+                    labeled_frame, _, _, classids, _, boxHeight, boxWidth = infer_image(net, layer_names, height, width,
                                                                    labeled_frame, colors, labels, confidence, threshold)
 
                     try:
@@ -121,7 +123,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                     except:
                         obj = None
 
-                    if ((obj == 'truck') and (delay <= 0)):
+                    if ((obj == 'truck') and (delay <= 0) and (boxWidth >= (boxHeight * 1.4))):
                         # Extract Timestamp from Video
                         try:
                             modified_name = output_name + ('_{time}'.format(time=str(int(vid.get(cv.CAP_PROP_POS_MSEC)))))
@@ -129,6 +131,8 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                         except:
                             # print("[ERROR] Failed to get timestamp of video")
                             modified_name = output_name + '_?'
+
+                        print("\nHeight:{h}\nWidth:{w}\n".format(h=boxHeight, w=boxWidth))
 
                         if (option == 0) or (option == 2):  # Save raw image
                             save_image(raw_frame, modified_name, save_path, True)
@@ -155,6 +159,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
             if writer is not None:
                 writer.release()
             vid.release()
+
     else:
         # Infer real-time on webcam
         count = 0
@@ -165,11 +170,11 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
             height, width = frame.shape[:2]
 
             if count == 0:
-                frame, boxes, confidences, classids, index = infer_image(net, layer_names, height, width, frame, colors,
+                frame, boxes, confidences, classids, index, _, _ = infer_image(net, layer_names, height, width, frame, colors,
                                                                          labels, confidence, threshold)
                 count += 1
             else:
-                frame, boxes, confidences, classids, index = infer_image(net, layer_names, height, width, frame, colors,
+                frame, boxes, confidences, classids, index, _, _ = infer_image(net, layer_names, height, width, frame, colors,
                                                                          labels, confidence, threshold, boxes, confidences, classids,
                                                                          index, infer=False)
                 count = (count + 1) % 6
@@ -200,6 +205,7 @@ def save_image(img, output_name, save_path, raw):
 
 def draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels):
     # If there are any detections
+    x, y, w, h = 0, 0, 0, 0
     if len(idxs) > 0:
         for i in idxs.flatten():
             # Get the bounding box coordinates
@@ -214,7 +220,7 @@ def draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, label
             text = "{}: {:4f}".format(labels[classids[i]], confidences[i])
             cv.putText(img, text, (x, y - 5), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    return img
+    return img, (x + w), (y + h)
 
 
 def generate_boxes_confidences_classids(outs, height, width, tconf):
@@ -270,9 +276,9 @@ def infer_image(net, layer_names, height, width, img, colors, labels, confidence
         raise Exception('[ERROR] Required variables are set to None before drawing boxes on images.')
 
     # Draw labels and boxes on the image
-    img = draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels)
+    img, bH, bW = draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels)
 
-    return img, boxes, confidences, classids, idxs
+    return img, boxes, confidences, classids, idxs, bH, bW
 
 
 def show_progress_bar(count, total, num_images, diff, status=''):
