@@ -115,7 +115,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                 # Time frame inference and show progress
                 start = time.time()
                 if delay <= 0 and labeled_frame is not None:
-                    labeled_frame, _, _, classids, _, boxHeight, boxWidth = infer_image(net, layer_names, height, width,
+                    labeled_frame, _, _, classids, _, xPos, _, boxHeight, boxWidth = infer_image(net, layer_names, height, width,
                                                                    labeled_frame, colors, labels, confidence, threshold)
 
                     try:
@@ -123,7 +123,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                     except:
                         obj = None
 
-                    if ((obj == 'truck') and (delay <= 0) and (boxWidth >= (boxHeight * 1.4))):
+                    if ((obj == 'truck') and (delay <= 0) and (boxWidth >= (boxHeight * 1.4)) and ((xPos > 0.3 * width) and (xPos <= 0.7 * width))):
                         # Extract Timestamp from Video
                         try:
                             modified_name = output_name + ('_{time}'.format(time=str(int(vid.get(cv.CAP_PROP_POS_MSEC)))))
@@ -218,7 +218,7 @@ def draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, label
             text = "{}: {:4f}".format(labels[classids[i]], confidences[i])
             cv.putText(img, text, (x, y - 5), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    return img, (x + w), (y + h)
+    return img, x, y, (x + w), (y + h)
 
 
 def generate_boxes_confidences_classids(outs, height, width, tconf):
@@ -274,9 +274,9 @@ def infer_image(net, layer_names, height, width, img, colors, labels, confidence
         raise Exception('[ERROR] Required variables are set to None before drawing boxes on images.')
 
     # Draw labels and boxes on the image
-    img, bH, bW = draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels)
+    img, x, y, bH, bW = draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels)
 
-    return img, boxes, confidences, classids, idxs, bH, bW
+    return img, boxes, confidences, classids, idxs, x, y, bH, bW
 
 
 def show_progress_bar(count, total, num_images, diff, status=''):
