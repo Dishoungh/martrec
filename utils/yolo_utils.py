@@ -123,7 +123,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                     except:
                         obj = None
 
-                    if ((obj == 'truck') and (delay <= 0) and (boxWidth >= (boxHeight * 1.4)) and ((xPos > 0.3 * width) and (xPos <= 0.7 * width))):
+                    if ((obj == 'truck') and (delay <= 0) and (boxWidth >= (boxHeight * 1.4))):
                         # Extract Timestamp from Video
                         try:
                             modified_name = output_name + ('_{time}'.format(time=str(int(vid.get(cv.CAP_PROP_POS_MSEC)))))
