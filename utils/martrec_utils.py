@@ -22,6 +22,7 @@ DEFAULT_YOLO_MODEL_PATH_SETTING       = './config/'
 DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING = 0
 DEFAULT_YOLO_OUTPUT_NAME_SETTING      = 'output'
 DEFAULT_YOLO_PROCESS_SETTING          = False
+DEFAULT_YOLO_PROCESSED_FOLDER_SETTING = './processed_data/'
 DEFAULT_YOLO_INPUT_PATH_SETTING       = './input_data/'
 DEFAULT_YOLO_OUTPUT_PATH_SETTING      = './output_data/'
 DEFAULT_AWS_SEND_IMAGES_SETTING       = False
@@ -147,6 +148,11 @@ def parse_arguments():
                         default=DEFAULT_YOLO_PROCESS_SETTING,
                         help='Uses YOLOv3 to process a video file or image or webcam stream')                          
     
+    parser.add_argument('-pf', '--processed-folder',
+                        type=str,
+                        default=DEFAULT_YOLO_PROCESSED_FOLDER_SETTING,
+                        help='Specifies the folder where processed items go')
+    
     parser.add_argument('-s3', '--send-images',
                         type=bool,
                         default=DEFAULT_AWS_SEND_IMAGES_SETTING,
@@ -251,7 +257,7 @@ def download_model(args):
                 for data in response.iter_content(chunk_size=4096):
                     f.write(data)
                     data_length += len(data)
-                    show_progress_bar(data_length, total_length, 0, 2e-7)
+                    show_progress_bar(data_length, total_length, 0, 2e-7, 0)
         print("\n[SUCCESS] YOLOv3 Model Downloaded...")
     else:
         print("[ERROR] Unknown platform. "

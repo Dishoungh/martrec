@@ -2,11 +2,12 @@ import numpy as np
 import cv2 as cv
 import time
 import os
-import shutil
 import sys
+import multiprocessing
+import itertools
 
 
-def init(labelfile, config, weights, input_path):
+def init(labelfile, config, weights):
     # Get the labels
     labels = open(labelfile).read().strip().split('\n')
 
@@ -19,17 +20,92 @@ def init(labelfile, config, weights, input_path):
     # Get the output layer names of the model
     layer_names = net.getLayerNames()
     layer_names = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    
+    return labels, colors, net, layer_names
 
+def parse_input_path(input_path):
     data = []
     # Get everything from input path
     for path in os.listdir(input_path):
         if ('.png' in path) or ('.jpg' in path) or ('jpeg' in path) or ('.mp4' in path) or ('.avi' in path):
             data.append(path)
 
-    return labels, colors, net, layer_names, data
+    return data
 
+def start_yolo_process(args):
+    fileslist = parse_input_path(args.input_path)
+    num_processes = multiprocessing.cpu_count()
+    processes = []
+    tag = []
+    pid = 0
+    
 
-def process(image_path, video_path, output_name, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, labels, colors, net, layer_names, gui, gui_obj):
+    # Parse through Input Data Folder
+    for idx, file in enumerate(fileslist):
+        while ((pid < num_processes) and (idx < len(fileslist))):
+            if ((idx + pid) < len(fileslist)):
+                try:
+                    tFile = fileslist[idx+pid]
+                    in_path = str(args.input_path + tFile)
+                    processed_path = str(args.processed_folder + tFile)
+                    
+                    arguments = (tFile,
+                                 in_path,
+                                 processed_path,
+                                 tFile[:tFile.find('.')],
+                                 args.labels,
+                                 args.config,
+                                 args.weights,
+                                 args.output_path,
+                                 args.delay_time,
+                                 args.save_video,
+                                 args.option,
+                                 args.video_output_path,
+                                 args.confidence,
+                                 args.threshold,
+                                 pid,
+                                 False,
+                                 None)
+
+                    
+                    process = multiprocessing.Process(target=yolo_process, args=arguments)
+                    
+                    if process not in tag:
+                        processes.append(process)
+                except Exception as err:
+                    print("[ERROR] {e}".format(e=err))
+            pid += 1
+        
+        for process in processes:
+            try:
+                process.start()
+            except Exception as err:
+                print("[ERROR] {e}".format(e=err))
+            
+        for process in processes:
+            try:
+                process.join()
+            except Exception as err:
+                print("[ERROR] {e}".format(e=err))
+
+def yolo_process(file, file_path, done_path, output_name, labels, config, weights, save_path, delay_time, save_video, option, video_output_path, confidence, threshold, process_id, gui, gui_obj):
+    image_path = None
+    video_path = None
+    
+    if ('.png' in file_path) or ('.jpg' in file_path) or ('.jpeg' in file_path):
+        image_path = file_path
+        
+    if ('.mp4' in file_path) or ('.avi' in file_path):
+        video_path = file_path
+    
+    # Initialize labels, colors, and pretrain model
+    try:
+        labels, colors, net, layer_names = init(labels,
+                                                config, 
+                                                weights)
+    except Exception as err:
+        print("[ERROR] {e}".format(e=err))
+    
     # If both image and video files are given then raise error
 
     if image_path is None and video_path is None:
@@ -53,6 +129,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
         finally:
             img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
             save_image(img, output_name, save_path)
+            os.rename(file_path, done_path)
     elif video_path:
         print('[INFO] Starting video processing of {vp}...'.format(vp=str(video_path)))
     
@@ -145,7 +222,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
 
                 end = time.time()
                 timings = np.append(timings, (end - start))
-                show_progress_bar(timings.size, total, num_images, np.average(timings))
+                show_progress_bar(timings.size, total, num_images, np.average(timings), process_id)
                 
                 # Return progress bar value
                 if gui is True:
@@ -154,6 +231,7 @@ def process(image_path, video_path, output_name, save_path, delay_time, save_vid
                 		
             # End process
             print("\n[INFO] Cleaning up...")
+            os.rename(file_path, done_path)
             if writer is not None:
                 writer.release()
             vid.release()
@@ -279,7 +357,7 @@ def infer_image(net, layer_names, height, width, img, colors, labels, confidence
     return img, boxes, confidences, classids, idxs, x, y, bH, bW
 
 
-def show_progress_bar(count, total, num_images, diff, status=''):
+def show_progress_bar(count, total, num_images, diff, pid, status=''):
     bar_length = 40
     filled_length = int(round(bar_length * count / float(total)))
 
@@ -288,9 +366,12 @@ def show_progress_bar(count, total, num_images, diff, status=''):
 
     sec_left = diff * (total - count)
 
-    sys.stdout.write("[%s] %s%s (%s) %s ...%s\r" % (
-        str(bar), str(percentage), '%', time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
-        '[{i}]'.format(i=num_images), status))
+    sys.stdout.write("%s[%s] %s%s (%s) %s ...%s\r" % ('Process {p}:'.format(p=pid),
+                                                      str(bar), 
+                                                      str(percentage), 
+                                                      '%', 
+                                                      time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
+                                                      '[{i}]'.format(i=num_images), status))
     sys.stdout.flush()
 
 

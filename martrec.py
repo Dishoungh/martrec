@@ -11,52 +11,7 @@ def main():
         configure_aws()
 
     if args.process is True:
-        # Initialize labels, colors, and pretrain model
-        labels, colors, net, layer_names, data = init(args.labels,
-        					      args.config, 
-        					      args.weights,
-                                                      args.input_path)
-
-        # Parse through Input Data Folder
-        for d in data:
-            if ('.png' in d) or ('.jpg' in d) or ('.jpeg' in d):
-                # Process Image
-                process(str(args.input_path + d),
-                        None,
-                        d[:d.find('.')],
-                        args.output_path,
-                        args.delay_time,
-                        args.save_video,
-                        args.option,
-                        args.video_output_path,
-                        args.confidence,
-                        args.threshold,
-                        labels,
-                        colors,
-                        net,
-                        layer_names,
-                        gui=False,
-                        gui_obj=None)
-            else:
-                if ('.mp4' in d) or ('.avi' in d):
-                    # Process Video
-                    process(None,
-                            str(args.input_path + d),
-                            d[:d.find('.')],
-                            args.output_path,
-                            args.delay_time,
-                            args.save_video,
-                            args.option,
-                            args.video_output_path,
-                            args.confidence,
-                            args.threshold,
-                            labels,
-                            colors,
-                            net,
-                            layer_names,
-                            gui=False,
-                            gui_obj=None)
-                            
+        start_yolo_process(args)
 
     if args.create_bucket is True:
         # Create AWS bucket
