@@ -155,7 +155,7 @@ Screenshots (5), (6), (7), (8) all show the functionality of the command. In Scr
 
 
 ## Credits
-- Most of the code from utils/yolo_utils.py is from the repo: https://github.com/iArunava/YOLOv3-Object-Detection-with-OpenCV
+- Some code from utils/yolo_utils.py is from the repo: https://github.com/iArunava/YOLOv3-Object-Detection-with-OpenCV
 
 
 ## License
