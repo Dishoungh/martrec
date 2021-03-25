@@ -5,7 +5,10 @@ import os
 import sys
 import multiprocessing
 import itertools
+from utils.collage_utils import save_collage
 
+progresses = [''] * multiprocessing.cpu_count()
+MARK_V_THRESHOLD = 5
 
 def init(labelfile, config, weights):
     # Get the labels
@@ -34,16 +37,16 @@ def parse_input_path(input_path):
 
 def start_yolo_process(args):
     fileslist = parse_input_path(args.input_path)
-    num_processes = multiprocessing.cpu_count()
     processes = []
     tag = []
-    pid = 0
     
 
     # Parse through Input Data Folder
     for idx, file in enumerate(fileslist):
-        while ((pid < num_processes) and (idx < len(fileslist))):
+        pid = 0
+        while ((pid < multiprocessing.cpu_count()) and (idx < len(fileslist))):
             if ((idx + pid) < len(fileslist)):
+                # Create Processes
                 try:
                     tFile = fileslist[idx+pid]
                     in_path = str(args.input_path + tFile)
@@ -76,6 +79,7 @@ def start_yolo_process(args):
                     print("[ERROR] {e}".format(e=err))
             pid += 1
         
+        # Execute Processes
         for process in processes:
             try:
                 process.start()
@@ -127,7 +131,7 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
             raise Exception('[ERROR] Image cannot be loaded!\n'
                             'Please check the path provided!')
         finally:
-            img, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
+            img, _, _, _, _, _, _, _, _ = infer_image(net, layer_names, height, width, img, colors, labels, confidence, threshold)
             save_image(img, output_name, save_path)
             os.rename(file_path, done_path)
     elif video_path:
@@ -152,7 +156,9 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
                             'Please check the path provided!')
         finally:
             timings = np.array([])
-            count = 0
+            mark = False
+            mark_v = MARK_V_THRESHOLD
+            collage_list = []
             # Will attempt to count the number of frames in the video,
             # This is dependent on the OpenCV version
             try:
@@ -192,16 +198,19 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
                 # Time frame inference and show progress
                 start = time.time()
                 if delay <= 0 and labeled_frame is not None:
-                    labeled_frame, _, _, classids, _, xPos, _, boxHeight, boxWidth = infer_image(net, layer_names, height, width,
+                    labeled_frame, _, _, classids, _, xPos, yPos, boxWidth, boxHeight = infer_image(net, layer_names, height, width,
                                                                    labeled_frame, colors, labels, confidence, threshold)
 
                     try:
                         obj = labels[classids[0]]
                     except:
                         obj = None
-
-                    if ((obj == 'truck') and (delay <= 0) and (boxWidth >= (boxHeight * 1.4))):
-                        # Extract Timestamp from Video
+                        
+                    # Descriptions of a typical freight truck
+                    if ((mark is True) or ((obj == 'truck') and (boxWidth >= (boxHeight * 1.5)) 
+                                                        and (boxHeight >= 0.4 * height)
+                                                        and (boxWidth >= 0.7 * width))):
+                        # Extract Timestamp from Video (TODO: Explore with this: https://www.geeksforgeeks.org/text-detection-and-extraction-using-opencv-and-ocr/)
                         try:
                             modified_name = output_name + ('_{time}'.format(time=str(int(vid.get(cv.CAP_PROP_POS_MSEC)))))
                             # print(modified_name)
@@ -209,11 +218,36 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
                             # print("[ERROR] Failed to get timestamp of video")
                             modified_name = output_name + '_?'
 
-                        if (option == 0) or (option == 2):  # Save raw image
-                            save_image(raw_frame, modified_name, save_path, True)
-                        elif (option == 1) or (option == 2):  # Save labeled image
-                            save_image(labeled_frame, modified_name, save_path, False)
-                        num_images += 1
+                        #report_image_attributes(modified_name, xPos, boxWidth, boxHeight, width, height)
+                        
+                        if (mark_v == MARK_V_THRESHOLD) or (mark_v <= 0):
+                            if (option == 0) or (option == 2):  # Save raw image
+                                save_image(raw_frame, modified_name, save_path, True)
+                                num_images += 1
+                            if (option == 1) or (option == 2):  # Save labeled image
+                                save_image(labeled_frame, modified_name, save_path, False)
+                                num_images += 1
+                            if (option == 3): # Save Collage if mark_v <= 0
+                                if (mark_v > 0):
+                                    collage_list.append(raw_frame)
+                                else:
+                                    collage_list.append(raw_frame)
+                                    
+                                try:
+                                    save_collage(collage_list[0], collage_list[1])
+                                except Exception as err:
+                                    print("[ERROR] {e}".format(e=err))
+                        
+                        if (mark is False):
+                            mark = True
+                        else:
+                            if (mark_v <= 0):
+                                mark_v = MARK_V_THRESHOLD
+                                mark = False
+                                collage_list.clear()
+                            else:
+                                mark_v -= 1
+                                
                         delay = delay_time
 
                 delay -= 1
@@ -222,7 +256,7 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
 
                 end = time.time()
                 timings = np.append(timings, (end - start))
-                show_progress_bar(timings.size, total, num_images, np.average(timings), process_id)
+                show_progress_bar(timings.size, total, num_images, np.average(timings), output_name)
                 
                 # Return progress bar value
                 if gui is True:
@@ -231,10 +265,10 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
                 		
             # End process
             print("\n[INFO] Cleaning up...")
-            os.rename(file_path, done_path)
             if writer is not None:
                 writer.release()
             vid.release()
+            os.rename(file_path, done_path)
 
     else:
         # Infer real-time on webcam
@@ -246,11 +280,11 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
             height, width = frame.shape[:2]
 
             if count == 0:
-                frame, boxes, confidences, classids, index, _, _ = infer_image(net, layer_names, height, width, frame, colors,
+                frame, boxes, confidences, classids, index, _, _, _, _ = infer_image(net, layer_names, height, width, frame, colors,
                                                                          labels, confidence, threshold)
                 count += 1
             else:
-                frame, boxes, confidences, classids, index, _, _ = infer_image(net, layer_names, height, width, frame, colors,
+                frame, boxes, confidences, classids, index, _, _, _, _ = infer_image(net, layer_names, height, width, frame, colors,
                                                                          labels, confidence, threshold, boxes, confidences, classids,
                                                                          index, infer=False)
                 count = (count + 1) % 6
@@ -264,14 +298,22 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
 
     print("[SUCCESS] Image Processing Complete...")
 
+def report_image_attributes(modified_name, xPos, boxWidth, boxHeight, width, height):
+    print("Name: {n}".format(n=modified_name))
+    print("X Position: {x}".format(x=xPos))
+    print("BoxWidth: {bw}".format(bw=boxWidth))
+    print("BoxHeight: {bh}".format(bh=boxHeight))
+    print("Image Width: {iw}".format(iw=width))
+    print("Image Height: {ih}\n\n".format(ih=height))
+
 
 def save_image(img, output_name, save_path, raw):
     num = 1
     while True:
         if raw is True:
-            filename = '{s}{o}{n}_raw.png'.format(s=save_path, o=output_name, n=num)
+            filename = '{s}{o}_{n}_raw.png'.format(s=save_path, o=output_name, n=num)
         else:
-            filename = '{s}{o}{n}_labeled.png'.format(s=save_path, o=output_name, n=num)
+            filename = '{s}{o}_{n}_labeled.png'.format(s=save_path, o=output_name, n=num)
         if os.path.isfile(filename):
             num += 1
         else:
@@ -296,7 +338,7 @@ def draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, label
             text = "{}: {:4f}".format(labels[classids[i]], confidences[i])
             cv.putText(img, text, (x, y - 5), cv.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    return img, x, y, (x + w), (y + h)
+    return img, x, y, w, h
 
 
 def generate_boxes_confidences_classids(outs, height, width, tconf):
@@ -352,27 +394,29 @@ def infer_image(net, layer_names, height, width, img, colors, labels, confidence
         raise Exception('[ERROR] Required variables are set to None before drawing boxes on images.')
 
     # Draw labels and boxes on the image
-    img, x, y, bH, bW = draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels)
+    img, x, y, w, h = draw_labels_and_boxes(img, boxes, confidences, classids, idxs, colors, labels)
 
-    return img, boxes, confidences, classids, idxs, x, y, bH, bW
+    return img, boxes, confidences, classids, idxs, x, y, w, h
 
 
-def show_progress_bar(count, total, num_images, diff, pid, status=''):
-    bar_length = 40
+def show_progress_bar(count, total, num_images, diff, name, status=''):
+    bar_length = 30
     filled_length = int(round(bar_length * count / float(total)))
 
     percentage = round(100.0 * count / float(total), 1)
     bar = '=' * filled_length + '-' * (bar_length - filled_length)
 
     sec_left = diff * (total - count)
-
-    sys.stdout.write("%s[%s] %s%s (%s) %s ...%s\r" % ('Process {p}:'.format(p=pid),
-                                                      str(bar), 
-                                                      str(percentage), 
-                                                      '%', 
-                                                      time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
-                                                      '[{i}]'.format(i=num_images), status))
-    sys.stdout.flush()
+    
+    ### TODO: Figure out way to refresh multiple lines for each process
+    
+    sys.stdout.write("%s[%s] %s%s (%s) %s ...%s\r\n" % ('{p}:'.format(p=name),
+                                                        str(bar), 
+                                                        str(percentage), 
+                                                        '%', 
+                                                        time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
+                                                        '[{i}]'.format(i=num_images), status))
+    #sys.stdout.flush()
 
 
 def count_frames_manual(video):

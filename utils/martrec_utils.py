@@ -7,7 +7,7 @@ import platform
 # Default Values
 DEFAULT_AWS_CONFIGURE_SETTING         = False
 DEFAULT_AWS_BUCKET_NAME_SETTING       = None
-DEFAULT_YOLO_CONFIDENCE_SETTING       = 0.99
+DEFAULT_YOLO_CONFIDENCE_SETTING       = 0.90
 DEFAULT_AWS_CREATE_BUCKET_SETTING     = False
 DEFAULT_YOLO_CONFIG_SETTING           = './config/yolov3.cfg'
 DEFAULT_CLEAR_OUTPUTS_SETTING         = False
@@ -19,7 +19,7 @@ DEFAULT_AWS_GENERATE_CSV_SETTING      = False
 DEFAULT_YOLO_IMAGE_PATH_SETTING       = None
 DEFAULT_YOLO_LABELS_SETTING           = './config/coco-labels'
 DEFAULT_YOLO_MODEL_PATH_SETTING       = './config/'
-DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING = 0
+DEFAULT_YOLO_IMAGE_EXTRACTION_SETTING = 3
 DEFAULT_YOLO_OUTPUT_NAME_SETTING      = 'output'
 DEFAULT_YOLO_PROCESS_SETTING          = False
 DEFAULT_YOLO_PROCESSED_FOLDER_SETTING = './processed_data/'
@@ -130,7 +130,8 @@ def parse_arguments():
                              '0 = Save Raw Image Only\n'
                              '1 = Save Labeled Image Only\n'
                              '2 = Save Both Raw and Labeled\n'
-                             '3 = Save No Images\n'
+                             '3 = Save 2 - Image Collages (Raw)\n'
+                             '4 = Save No Images\n'
                              'Default: 0')
                              
     parser.add_argument('-on', '--output-name',
@@ -217,11 +218,11 @@ def check_parsed(args):
         sys.exit()
 
     # Checks if save options are valid
-    if args.option < 0 or args.option > 3:
+    if args.option < 0 or args.option > 4:
         print("[ERROR] Invalid option settings. Acceptable values are: [0-3]")
         sys.exit()
     else:
-        if args.option != 3 and args.process is True:
+        if args.option != 4 and args.process is True:
             print("[INFO] Images will be saved under: {sp}".format(sp=args.output_path))
 
     # Download the YOLOv3 models if needed
