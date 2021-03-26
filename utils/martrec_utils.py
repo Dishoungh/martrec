@@ -14,7 +14,7 @@ DEFAULT_CLEAR_OUTPUTS_SETTING         = False
 DEFAULT_AWS_CORS_FILE_SETTING         = 'config/cors.json'
 DEFAULT_AWS_CSV_FILE_SETTING          = './csv_files'
 DEFAULT_YOLO_DOWNLOAD_MODEL_SETTING   = False
-DEFAULT_YOLO_DELAY_TIME_SETTING       = 100
+DEFAULT_YOLO_DELAY_TIME_SETTING       = 25
 DEFAULT_AWS_GENERATE_CSV_SETTING      = False
 DEFAULT_YOLO_IMAGE_PATH_SETTING       = None
 DEFAULT_YOLO_LABELS_SETTING           = './config/coco-labels'
@@ -70,8 +70,8 @@ def parse_arguments():
     parser.add_argument('-co', '--clear-outputs',
                         type=bool,
                         default=DEFAULT_CLEAR_OUTPUTS_SETTING,
-                        help='Clears the data in the output folder including any generated csv files')                 
-    
+                        help='Clears the data in the output folder including any generated csv files')     
+
     parser.add_argument('-cor', '--cors-file',
                         type=str,
                         default=DEFAULT_AWS_CORS_FILE_SETTING,
