@@ -4,8 +4,6 @@ import time
 import os
 import sys
 import multiprocessing
-import itertools
-from reprint import output
 
 def init(labelfile, config, weights):
     # Get the labels
@@ -242,7 +240,7 @@ def yolo_process(file, file_path, done_path, output_name, labels, config, weight
 
                                 
                                 # Put two images vertically on a collage
-                                #save_image(np.vstack([primary, secondary]), collage_name, save_path, True)                               
+                                save_image(np.vstack([primary, secondary]), collage_name, save_path, True)
                                 num_images += 1
                             except Exception as err:
                                 print("[ERROR] {e}".format(e=err))
@@ -425,24 +423,13 @@ def show_progress_bar(count, total, num_images, diff, name, pid, status=''):
 
     sec_left = diff * (total - count)
     
-    string = "{n}[{b}] {p}% ({t}) [{i}] ...{s}\r".format(n=name,
-                                                     b=bar,
-                                                     p=percentage,
-                                                     t=time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
-                                                     i=num_images,
-                                                     s=status)
-                                                     
-    ### TODO: Figure out way to refresh multiple lines for each process
-    with output(initial_len=multiprocessing.cpu_count(), interval=0) as output_lines:
-        output_lines[pid] = string
-        time.sleep(0.5)
-    #sys.stdout.write("%s[%s] %s%s (%s) %s ...%s\r\n" % ('{p}:'.format(p=name),
-    #                                                    str(bar), 
-    #                                                    str(percentage), 
-    #                                                    '%', 
-    #                                                    time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
-    #                                                    '[{i}]'.format(i=num_images), status))
-    #sys.stdout.flush()
+    sys.stdout.write("%s[%s] %s%s (%s) %s ...%s\r\n" % ('{p}:'.format(p=name),
+                                                        str(bar), 
+                                                        str(percentage), 
+                                                        '%', 
+                                                        time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
+                                                        '[{i}]'.format(i=num_images), status))
+    sys.stdout.flush()
 
 
 def count_frames_manual(video):
