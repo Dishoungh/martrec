@@ -20,7 +20,7 @@ def main():
 
     if args.send_images is True:
         # Upload extracted images to AWS S3 (if argument is set to true)
-        send_to_s3(args.save_path, args.bucket_name)
+        send_to_s3(args.output_path, args.bucket_name)
 
     if args.generate_csv is True:
         # Pull key IDs from objects and get CSV file
