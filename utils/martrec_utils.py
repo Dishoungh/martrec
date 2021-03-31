@@ -198,13 +198,13 @@ def parse_arguments():
 
 def check_parsed(args):
     # Checks if directory from save path exists or not
-    if not os.path.isdir(args.input_path):
+    if not os.path.exists(args.input_path):
         os.mkdir(args.input_path)
 
-    if not os.path.isdir(args.output_path):
+    if not os.path.exists(args.output_path):
         os.mkdir(args.output_path)
 
-    if not os.path.isdir(args.csv_save):
+    if not os.path.exists(args.csv_save):
         os.mkdir(args.csv_save)
 
     # Checks if delay time is valid
