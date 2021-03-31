@@ -429,7 +429,7 @@ def show_progress_bar(count, total, num_images, diff, name, pid, status=''):
                                                         '%', 
                                                         time.strftime('%Hh, %Mm, %Ss', time.gmtime(sec_left)),
                                                         '[{i}]'.format(i=num_images), status))
-    sys.stdout.flush()
+    #sys.stdout.flush()
 
 
 def count_frames_manual(video):
