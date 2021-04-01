@@ -61,7 +61,7 @@ This will send an HTTP request to download the yolov3.weights to the specified c
 To process videos or images, I recommend creating two folders for martrec to find the incoming file to process and to save output files into. By default, the script will look into the folders called "input_data" and "output_data". The script will also generate .csv files inside a folder called "csv_files". Create those folders inside the project folder. Your folders should look like screenshot (3). By default, the repo should provide those folders now. As of this edit, Martrec should automatically process everything in "input_data" folder.
 The command to process videos/images:  
 ```sh
-python martrec.py --process=True --option=option
+python martrec.py --process=True
 ```
 
 This command uses YOLOv3 to process the image or video and outputs image file(s) and every time a truck or car is detected, the script will extract the image as whatever is specified in --output-name. What --option does is specify how the extracted image should be saved. Option is an integer value from 0 to 2. By default, option is 0. Screenshot (4) demonstrates this functionality.
