@@ -18,14 +18,20 @@ While Martrec does support GUI using the TKinter package, it's recommended to us
   - The repo was built and tested on Python 3.7+. Make sure you have python3-pip installed and install the required packages. (Use pip3 if you have Python 2 installed so the system doesn't get confused)
     ```sh
     pip install opencv-python numpy awscli
+    or 
+    conda install -c conda-forge numpy opencv awscli
     ```
   - Tkinter, a Python GUI library, should come with most Python distributions. In case if you don't have Tkinter, you can install it using:
     ```sh
     sudo apt install python3-tk (Ubuntu)
+    or
+    conda install -c conda-forge tk 
     ```
   - You may need to also pip3 install "requests" if you're on Windows in order to download the yolov3 weights model.
-    ```sh
-    pip install requests
+    ```sh 
+    pip install requests 
+    or
+    conda install -c conda-forge requests 
     ```
 
 - Cloning the Repo
